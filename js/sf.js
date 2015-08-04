@@ -222,6 +222,5 @@ var sf = new function () {
 			}, 100)
 		] : '';
 	}
-
 	return sf;
 }
