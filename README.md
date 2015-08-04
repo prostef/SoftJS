@@ -1,0 +1,2 @@
+# SoftJS
+Script like jQ
