@@ -17,11 +17,13 @@ var sf = (function(){
 		// inner
 
 		def.get(obj,'inner',function(){
-			var inner=[];
-			sortOut(this,function(el){
-				inner.push(el.innerHTML);
-			});
-			return inner.reverse().join(', ');
+			return this.lentdh==1 ? this[0].innerHTML : (function(){
+				var inner=[];
+				sortOut(this,function(el){
+					inner.push(el.innerHTML);
+				});
+				return inner.reverse();
+			})();
 		});
 
 		def.set(obj,'inner',function(str){
@@ -75,7 +77,7 @@ var sf = (function(){
 		return tmp.reverse();
 	}
 
-	// General object and methods
+	// General object
 
 	var sf=function(argument, callback){
 		var Objects=document.querySelectorAll(argument);
@@ -83,6 +85,8 @@ var sf = (function(){
 		callback && sortOut(Objects, callback);
 		return mixins(new actions);
 	}
+
+	// General methods
 
 	sf.test=function(){
 		console.log(this);
