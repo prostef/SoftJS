@@ -13,6 +13,9 @@ var sf = (function(){
 	// Setters and Getters
 
 	var mixins=function(obj){
+
+		// inner
+
 		def.get(obj,'inner',function(){
 			var inner=[];
 			sortOut(this,function(el){
@@ -25,6 +28,18 @@ var sf = (function(){
 			sortOut(this,function(el){
 				el.innerHTML=str;
 			});
+		});
+
+		// class
+		
+		def.get(obj,'class',function(){
+			return this.length==1 ? this[0].className : (function(){
+				var cls=[];
+				sortOut(this,function(el){
+					cls.push(el.className);
+				});
+				return cls.reverse();
+			})();
 		});
 
 		return obj;
@@ -63,7 +78,9 @@ var sf = (function(){
 		return mixins(new actions);
 	}
 
-
+	sf.test=function(){
+		console.log(this);
+	}
 
 	return sf;
 })()
