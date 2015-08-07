@@ -56,9 +56,10 @@ var sf = (function(){
 
 	// General object and methods
 
-	var sf=function(argument){
+	var sf=function(argument, callback){
 		var Objects=document.querySelectorAll(argument);
 		actions.prototype=Objects;
+		callback && sortOut(Objects, callback);
 		return mixins(new actions);
 	}
 
