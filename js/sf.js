@@ -41,6 +41,12 @@ var sf = (function(){
 				return cls.reverse();
 			})();
 		});
+		
+		def.set(obj,'class',function(str){
+			sortOut(this,function(el){
+				el.setAttribute('class',str);
+			});
+		});
 
 		return obj;
 	}
