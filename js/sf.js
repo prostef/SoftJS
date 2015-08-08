@@ -8,9 +8,6 @@ var sf = (function(){
 				console.log(el);
 			});
 		}
-
-		this.css = {}
-
 	}
 
 	// Setters and Getters
