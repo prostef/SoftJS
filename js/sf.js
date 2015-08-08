@@ -75,10 +75,11 @@ var sf = (function(){
 								sortOut(self, function(el){
 									tmp.push(el.style[key]);
 								});
-								return tmp;
+								return tmp.reverse();
 							})();
 						}
 					}(key));
+
 					def.set(css, key, function(key){
 						return function(val){
 							sortOut(self, function(el){
