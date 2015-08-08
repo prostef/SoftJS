@@ -1,5 +1,5 @@
 var sf = (function(){
-	
+
 	// Methods
 
 	var actions = function(nodeList){
@@ -8,6 +8,9 @@ var sf = (function(){
 				console.log(el);
 			});
 		}
+
+		this.css = {}
+
 	}
 
 	// Setters and Getters
@@ -17,9 +20,10 @@ var sf = (function(){
 		// inner
 
 		def.get(obj, 'inner' ,function(){
-			return this.lentdh == 1 ? this[0].innerHTML : (function(){
+			var self = this;
+			return this.length == 1 ? this[0].innerHTML : (function(){
 				var inner = [];
-				sortOut(this, function(el){
+				sortOut(self, function(el){
 					inner.push(el.innerHTML);
 				});
 				return inner.reverse();
@@ -35,9 +39,10 @@ var sf = (function(){
 		// class
 
 		def.get(obj, 'class', function(){
+			var self = this;
 			return this.length == 1 ? this[0].className : (function(){
 				var cls = [];
-				sortOut(this, function(el){
+				sortOut(self, function(el){
 					cls.push(el.className);
 				});
 				return cls.reverse();
@@ -53,11 +58,56 @@ var sf = (function(){
 		// css
 
 		def.set(obj, 'css', function(props){
+			var propsStr = '';
+			for(key in props)propsStr+=(key+':'+props[key]+';');
 			sortOut(this, function(el){
-				el.style.cssText=props;
+				el.style.cssText = propsStr;
 			});
 		});
 
+		def.get(obj, 'css', function(){
+			var self = this;
+			var css = {};
+			sortOut(self, function(el){
+
+				for(key in el.style){
+					def.get(css, key, function(key){
+						return function(){
+							return self.length == 1 ? self[0].style[key] : (function(){
+								var tmp = [];
+								sortOut(self, function(el){
+									tmp.push(el.style[key]);
+								});
+								return tmp;
+							})();
+						}
+					}(key));
+					def.set(css, key, function(key){
+						return function(val){
+							sortOut(self, function(el){
+								el.style[key] = val;
+							});
+						}
+					}(key));
+				}
+
+			});
+			return css;
+		});
+
+		// style
+
+		def.get(obj, 'style', function(){
+			var self = this;
+			return this.length == 1 ? this[0].style.cssText : (function(){
+				var style = [];
+				sortOut(self, function(el){
+					style.push(el.style.cssText);
+				});
+				return style.reverse();
+			})();
+		});
+		
 		return obj;
 	}
 
