@@ -186,8 +186,10 @@ var sf = (function(){
 
 	// General object
 
-	var sf = function(argument, callback){
-		var Objects = document.querySelectorAll(argument);
+	var sf = function(arg, callback){
+		var Objects = Array.isArray(arg) ? arg : (function(){
+			return typeof(arg) != 'string' ? [arg] : document.querySelectorAll(arg);
+		})();
 		actions.prototype=Objects;
 		callback && sortOut(Objects, callback);
 		return mixins(new actions);
