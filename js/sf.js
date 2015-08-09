@@ -206,10 +206,99 @@ var sf = (function(){
 	}
 
 	// General methods
-
+	
 	sf.test = function(){
 		console.log(this);
 	}
 
+	sf.ajax = function (dst, fd, callback, fallback) {
+		if (typeof(dst) != 'string') return false;
+		if (typeof(fd) != 'object') return false;
+		if ((fd.constructor.name && fd.constructor.name != 'FormData') && fd.constructor != FormData) fd = new FormData(fd);
+		var req = new XMLHttpRequest();
+		if (req.readyState == 4 || req.readyState == 0) {
+			req.open('POST', dst, true);
+			req.onreadystatechange = function (req) {
+				return function () {
+					if (req.readyState == 4) {
+						if (req.status == 200 && typeof(callback) == 'function') callback(req);
+						else if (typeof(fallback) == 'function') fallback(req);
+					}
+				}
+			}(req);
+			req.send(fd);
+		}
+		else if (typeof(fallback) == 'function') fallback(req);
+	}
+
+	sf.newNode = function (node) {
+		return node ? document.createElement(node) : false;
+	}
+
+	sf.addNode = function (child, parent) {
+		parent = parent ? parent : document.body;
+		child ? parent.appendChild(child) : false;
+	}
+
+	sf.rmNode = function (child) {
+		child ? child.parentNode.removeChild(child) : false;
+	}
+
+	sf.addCssFile = function (path) {
+		var node = this.newNode('link');
+		this(node).attr('rel', 'stylesheet');
+		this(node).attr('type', 'text/css');
+		this(node).attr('href', path);
+		this('head > link[href="' + path + '"]')[0] ? false : this.addNode(node, document.head);
+	}
+
+	sf.alert = function (contentText, titleText, titleColor, fontFamily) {
+		self = this;
+		var titleText = titleText ? titleText : 'Уведомление';
+		var titleColor = titleColor ? titleColor : '#000';
+		var contentText = contentText ? contentText : '...';
+		self.addCssFile('css/sf.css');
+		self('#sf-Alert')[0] ? [clearTimeout(self.timeOut), self.rmNode(self('#sf-Alert')[0])] : '';
+
+		mainWindow = self.newNode('div');
+		mainWindow.id = 'sf-Alert';
+		mainWindow.style['font-family'] = fontFamily ? fontFamily : '';
+		mainWindow.onclick = function () {
+			clearTimeout(self.timeOut);
+			self.rmNode(self('#sf-Alert')[0]);
+		};
+		mainWindow.innerHTML = '<h1 id="sf-Alert-Title" style="color: ' + titleColor + ';">' + titleText + '</h1><div id="sf-Alert-Content">' + contentText + '</div>';
+		self.addNode(mainWindow);
+		self('#sf-Alert').css.opacity='0.9';
+		self.timeOut = setTimeout(
+			function () {
+				self('#sf-Alert').css.opacity='0';
+				setTimeout(function () {self.rmNode(mainWindow);}, 300);
+			},
+			5000
+		);
+	}
+
+	sf.zoomImg = function (src, srcLoader) {
+		self = this;
+		self.addCssFile('css/sf.css');
+		self('#sf-popupContainer')[0] ? self.rmNode(self('#sf-popupContainer')[0]) : '';
+		src && (function(){
+			popupWindow = self.newNode('div');
+			style = srcLoader ? 'style="background-image: url(' + srcLoader + ');"' : '';
+			popupWindow.id = 'sf-popupContainer';
+			popupWindow.innerHTML = '<div id="sf-popupLine" ' + style + '></div><div id="sf-popupContent"><img id="sf-popupImg" src=""></div>';
+			popupWindow.onclick = function (event) {
+				var event = event ? event : window.event;
+				event.target.id == popupWindow.id ? self.rmNode(popupWindow) : '';
+			};
+			self.addNode(popupWindow);
+			setTimeout(function () {
+				self('#sf-popupImg').attr('src', src);
+			}, 100);
+		})();
+	}
+
 	return sf;
+
 })();
