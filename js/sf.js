@@ -87,6 +87,16 @@ var sf = (function(){
 			});
 		}
 
+		// css
+
+		this.setCss = function(props){
+			var propsStr = '';
+			for(key in props)propsStr+=(key+':'+props[key]+';');
+			sortOut(this, function(el){
+				el.style.cssText = propsStr;
+			});
+		}
+
 	}
 
 	// Setters and Getters
@@ -102,18 +112,12 @@ var sf = (function(){
 		// class
 
 		def.get(obj, 'class', obj.getClass);
-		
+
 		def.set(obj, 'class', obj.setClass);
 
 		// css
 
-		def.set(obj, 'css', function(props){
-			var propsStr = '';
-			for(key in props)propsStr+=(key+':'+props[key]+';');
-			sortOut(this, function(el){
-				el.style.cssText = propsStr;
-			});
-		});
+		def.set(obj, 'css', obj.setCss);
 
 		def.get(obj, 'css', function(){
 			var self = this;
