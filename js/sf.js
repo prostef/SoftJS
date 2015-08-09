@@ -3,11 +3,52 @@ var sf = (function(){
 	// Methods
 
 	var actions = function(nodeList){
-		this.test = function(){
+
+		// attr
+
+		this.attr=function(at, val){
+			return typeof(val) != 'undefined' ? this.setAttr(at, val) : this.getAttr(at);
+		}
+
+		this.setAttr=function(at, val){
 			sortOut(this,function(el){
-				console.log(el);
+				el.setAttribute(at,val);
 			});
 		}
+
+		this.getAttr=function(at){
+			var self = this;
+			return this.length == 1 ? this[0].getAttribute(at) : (function(){
+				var attr=[];
+				sortOut(self,function(el){
+					attr.push(el.getAttribute(at));
+				});
+				return attr.reverse();
+			})();
+		}
+
+		this.addAttr = function (at, val) {
+			sortOut(this, function (obj) {
+				var v = obj.getAttribute(at) || val;
+				obj.setAttribute(at, v.match(val) ? v : v + ' ' + val);
+			});
+		}
+
+		this.rmAttr = function (at, val) {
+			sortOut(this, function (obj) {
+				var v = (obj.getAttribute(at) || val).replace(val, '').replace(/(^\s+|\s+$)/, '');
+				v ? obj.setAttribute(at, v) : obj.removeAttribute(at);
+			});
+		}
+
+		// rmNode
+
+		this.rmNode = function (){
+			sortOut(this, function (obj) {
+				obj.parentNode.removeChild(obj);
+			});
+		}
+
 	}
 
 	// Setters and Getters
