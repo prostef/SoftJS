@@ -97,29 +97,7 @@ var sf = (function(){
 			});
 		}
 
-	}
-
-	// Setters and Getters
-
-	var mixins = function(obj){
-
-		// inner
-
-		def.get(obj, 'inner' , obj.getInner);
-
-		def.set(obj, 'inner', obj.setInner);
-
-		// class
-
-		def.get(obj, 'class', obj.getClass);
-
-		def.set(obj, 'class', obj.setClass);
-
-		// css
-
-		def.set(obj, 'css', obj.setCss);
-
-		def.get(obj, 'css', function(){
+		this.getCss = function(){
 			var self = this;
 			var css = {};
 			sortOut(self, function(el){
@@ -148,11 +126,11 @@ var sf = (function(){
 
 			});
 			return css;
-		});
+		}
 
 		// style
 
-		def.get(obj, 'style', function(){
+		this.getStyle = function(){
 			var self = this;
 			return this.length == 1 ? this[0].style.cssText : (function(){
 				var style = [];
@@ -161,8 +139,36 @@ var sf = (function(){
 				});
 				return style.reverse();
 			})();
-		});
-		
+		}
+
+	}
+
+	// Setters and Getters
+
+	var mixins = function(obj){
+
+		// inner
+
+		def.get(obj, 'inner' , obj.getInner);
+
+		def.set(obj, 'inner', obj.setInner);
+
+		// class
+
+		def.get(obj, 'class', obj.getClass);
+
+		def.set(obj, 'class', obj.setClass);
+
+		// css
+
+		def.set(obj, 'css', obj.setCss);
+
+		def.get(obj, 'css', obj.getCss);
+
+		// style
+
+		def.get(obj, 'style', obj.getStyle);
+
 		return obj;
 	}
 
