@@ -141,6 +141,21 @@ var sf = (function(){
 			})();
 		}
 
+		// events
+
+		this.addEv = function (ev, func, capt) {
+			sortOut(this, function (obj) {
+				obj.addEventListener(ev, func, capt);
+			});
+			return func;
+		}
+
+		this.rmEv = function (ev, func, capt) {
+			sortOut(this, function (obj) {
+				obj.removeEventListener(ev, func, capt);
+			});
+		}
+
 	}
 
 	// Setters and Getters
