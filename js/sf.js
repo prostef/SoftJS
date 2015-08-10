@@ -206,10 +206,6 @@ var sf = (function(){
 	}
 
 	// General methods
-	
-	sf.test = function(){
-		console.log(this);
-	}
 
 	sf.ajax = function (dst, fd, callback, fallback) {
 		if (typeof(dst) != 'string') return false;
