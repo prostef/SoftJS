@@ -310,25 +310,6 @@ var sf = (function(){
 		})();
 	}
 
-	sf.animate = function(struct){
-		var start = performance.now();
-		requestAnimationFrame(function req(time) {
-
-			// timeFraction от 0 до 1
-			var timeFraction = (time - start) / struct.duration;
-			(timeFraction > 1) && (timeFraction = 1);
-
-			// текущее состояние анимации
-			var progress = struct.timing(timeFraction)
-
-			struct.draw((progress * 100));
-
-			(timeFraction < 1) && requestAnimationFrame(req);
-
-		});
-
-	}
-
 	sf.animate = (function(){
 		var animate = function(struct){
 			var start = performance.now();
