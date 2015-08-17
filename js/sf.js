@@ -143,15 +143,15 @@ var sf = (function(){
 
 		// events
 
-		this.addEv = function (ev, func, capt) {
-			sortOut(this, function (obj) {
+		this.addEv = function(ev, func, capt){
+			sortOut(this, function(obj){
 				obj.addEventListener(ev, func, capt);
 			});
 			return func;
 		}
 
-		this.rmEv = function (ev, func, capt) {
-			sortOut(this, function (obj) {
+		this.rmEv = function(ev, func, capt){
+			sortOut(this, function (obj){
 				obj.removeEventListener(ev, func, capt);
 			});
 		}
@@ -309,6 +309,52 @@ var sf = (function(){
 			}, 100);
 		})();
 	}
+
+	sf.animate = function(struct){
+		var start = performance.now();
+		requestAnimationFrame(function req(time) {
+
+			// timeFraction от 0 до 1
+			var timeFraction = (time - start) / struct.duration;
+			(timeFraction > 1) && (timeFraction = 1);
+
+			// текущее состояние анимации
+			var progress = struct.timing(timeFraction)
+
+			struct.draw((progress * 100));
+
+			(timeFraction < 1) && requestAnimationFrame(req);
+
+		});
+
+	}
+
+	sf.animate = (function(){
+		var animate = function(struct){
+			var start = performance.now();
+			requestAnimationFrame(function req(time) {
+
+				// timeFraction от 0 до 1
+				var timeFraction = (time - start) / struct.duration;
+				(timeFraction > 1) && (timeFraction = 1);
+
+				// текущее состояние анимации
+				var progress = struct.timing(timeFraction)
+
+				struct.draw((progress * 100));
+
+				(timeFraction < 1) && requestAnimationFrame(req);
+
+			});
+		}
+
+		animate.linear = function(struct){
+			struct.timing = function(timeFraction){return timeFraction;}
+			this(struct);
+		}
+
+		return animate;
+	})();
 
 	return sf;
 
