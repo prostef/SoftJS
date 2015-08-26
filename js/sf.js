@@ -333,6 +333,20 @@ var sf = (function(){
 			struct.timing = function(timeFraction){return timeFraction;}
 			this(struct);
 		}
+		animate.cubic = function(struct){
+			struct.timing = function(timeFraction){
+				// P = (1−t)3P1 + 3(1−t)2tP2 +3(1−t)t2P3 + t3P4
+				var p1 = 0.46;
+				var p2 = 0.03;
+				var p3 = 0.52;
+				var p4 = 0.96;
+				var left = (Math.pow((1-timeFraction),3)*p1) + (3*Math.pow((1-timeFraction),2)*timeFraction*p2);
+				var right = 3*(1-timeFraction)*Math.pow(timeFraction,2)*p3 + Math.pow(timeFraction,3)*p4;
+				// console.log(left+right);
+				return left+right;
+			}
+			this(struct);
+		}
 
 		return animate;
 	})();
