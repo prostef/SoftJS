@@ -333,17 +333,20 @@ var sf = (function(){
 			struct.timing = function(timeFraction){return timeFraction;}
 			this(struct);
 		}
-		animate.cubic = function(struct){
+
+		animate.cubic = function(struct, coords){
+			var coords = coords ? coords : [0.65,0.05,0.36,1];
+			var p1 = [0,0];
+			var p2 = [coords[0],coords[1]];
+			var p3 = [coords[2],coords[3]];
+			var p4 = [1,1];
+
 			struct.timing = function(timeFraction){
-				// P = (1−t)3P1 + 3(1−t)2tP2 +3(1−t)t2P3 + t3P4
-				var p1 = 0.46;
-				var p2 = 0.03;
-				var p3 = 0.52;
-				var p4 = 0.96;
-				var left = (Math.pow((1-timeFraction),3)*p1) + (3*Math.pow((1-timeFraction),2)*timeFraction*p2);
-				var right = 3*(1-timeFraction)*Math.pow(timeFraction,2)*p3 + Math.pow(timeFraction,3)*p4;
-				// console.log(left+right);
-				return left+right;
+				var x = (Math.pow((1-timeFraction),3)*p1[0]) + (3*Math.pow((1-timeFraction),2)*timeFraction*p2[0]);
+				x = x + (3*(1-timeFraction)*Math.pow(timeFraction,2)*p3[0]) + (Math.pow(timeFraction,3)*p4[0]);
+				var y= (Math.pow((1-timeFraction),3)*p1[1]) + (3*Math.pow((1-timeFraction),2)*timeFraction*p2[1]);
+				y = y + (3*(1-timeFraction)*Math.pow(timeFraction,2)*p3[1]) + (Math.pow(timeFraction,3)*p4[1]);
+				return y;
 			}
 			this(struct);
 		}
