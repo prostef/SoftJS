@@ -6,17 +6,17 @@ var sf = (function(){
 
 		// attr
 
-		this.attr=function(at, val){
+		this.attr = function(at, val){
 			return typeof(val) != 'undefined' ? this.setAttr(at, val) : this.getAttr(at);
 		}
 
-		this.setAttr=function(at, val){
+		this.setAttr = function(at, val){
 			sortOut(this,function(el){
 				el.setAttribute(at,val);
 			});
 		}
 
-		this.getAttr=function(at){
+		this.getAttr = function(at){
 			var self = this;
 			return this.length == 1 ? this[0].getAttribute(at) : (function(){
 				var attr=[];
@@ -27,14 +27,14 @@ var sf = (function(){
 			})();
 		}
 
-		this.addAttr = function (at, val) {
+		this.addAttr = function(at, val) {
 			sortOut(this, function (obj) {
 				var v = obj.getAttribute(at) || val;
 				obj.setAttribute(at, v.match(val) ? v : v + ' ' + val);
 			});
 		}
 
-		this.rmAttr = function (at, val) {
+		this.rmAttr = function(at, val) {
 			sortOut(this, function (obj) {
 				var v = (obj.getAttribute(at) || val).replace(val, '').replace(/(^\s+|\s+$)/, '');
 				v ? obj.setAttribute(at, v) : obj.removeAttribute(at);
@@ -43,7 +43,7 @@ var sf = (function(){
 
 		// rmNode
 
-		this.rmNode = function (){
+		this.rmNode = function(){
 			sortOut(this, function (obj) {
 				obj.parentNode.removeChild(obj);
 			});
@@ -204,7 +204,7 @@ var sf = (function(){
 		},
 	}
 
-	var sortOut = function (object, callback) {
+	var sortOut = function(object, callback) {
 		var i = object.length;
 		while(i--)callback(object[i]);
 	}
@@ -242,20 +242,20 @@ var sf = (function(){
 		else if (typeof(fallback) == 'function') fallback(req);
 	}
 
-	sf.newNode = function (node) {
+	sf.newNode = function(node) {
 		return node ? document.createElement(node) : false;
 	}
 
-	sf.addNode = function (child, parent) {
+	sf.addNode = function(child, parent) {
 		parent = parent ? parent : document.body;
 		child ? parent.appendChild(child) : false;
 	}
 
-	sf.rmNode = function (child) {
+	sf.rmNode = function(child) {
 		child ? child.parentNode.removeChild(child) : false;
 	}
 
-	sf.addCssFile = function (path) {
+	sf.addCssFile = function(path) {
 		var node = this.newNode('link');
 		this(node).attr('rel', 'stylesheet');
 		this(node).attr('type', 'text/css');
@@ -263,7 +263,7 @@ var sf = (function(){
 		this('head > link[href="' + path + '"]')[0] ? false : this.addNode(node, document.head);
 	}
 
-	sf.alert = function (contentText, titleText, titleColor, fontFamily) {
+	sf.alert = function(contentText, titleText, titleColor, fontFamily) {
 		self = this;
 		var titleText = titleText ? titleText : 'Уведомление';
 		var titleColor = titleColor ? titleColor : '#000';
@@ -290,7 +290,7 @@ var sf = (function(){
 		);
 	}
 
-	sf.zoomImg = function (src, srcLoader) {
+	sf.zoomImg = function(src, srcLoader) {
 		self = this;
 		self.addCssFile('css/sf.css');
 		self('#sf-popupContainer')[0] ? self.rmNode(self('#sf-popupContainer')[0]) : '';
