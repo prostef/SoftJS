@@ -215,7 +215,7 @@ var sf = (function(){
 		var Objects = Array.isArray(arg) ? arg : (function(){
 			return typeof(arg) != 'string' ? [arg] : document.querySelectorAll(arg);
 		})();
-		actions.prototype=Objects;
+		actions.prototype = Array.prototype.slice.call(Objects);
 		callback && sortOut(Objects, callback);
 		return mixins(new actions);
 	}
