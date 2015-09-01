@@ -229,32 +229,29 @@ var sf = (function(){
 		var req = new XMLHttpRequest();
 		if (req.readyState == 4 || req.readyState == 0) {
 			req.open('POST', dst, true);
-			req.onreadystatechange = function (req) {
-				return function () {
-					if (req.readyState == 4) {
-						if (req.status == 200 && typeof(callback) == 'function') callback(req);
-						else if (typeof(fallback) == 'function') fallback(req);
-					}
+			req.onreadystatechange = function(){
+				if (req.readyState == 4) {
+					if (req.status == 200 && typeof(callback) == 'function') callback(req);
+					else if (typeof(fallback) == 'function') fallback(req);
 				}
-			}(req);
+			};
 			req.send(fd);
 		}
 		else if (typeof(fallback) == 'function') fallback(req);
 	}
+
 	sf.ajax.json = function(dst,data,callback,fallback){
 		var dst = (dst && typeof(dst)=='string') ? dst : '/';
 		var data = (data && typeof(data)=='object') ? data : {};
 		var req = new XMLHttpRequest();
 		if (req.readyState == 4 || req.readyState == 0) {
 			req.open('POST', dst, true);
-			req.onreadystatechange = function(req){
-				return function () {
-					if (req.readyState == 4) {
-						if (req.status == 200 && typeof(callback) == 'function') callback(req);
-						else if (typeof(fallback) == 'function') fallback(req);
-					}
+			req.onreadystatechange = function(){
+				if (req.readyState == 4) {
+					if (req.status == 200 && typeof(callback) == 'function') callback(req);
+					else if (typeof(fallback) == 'function') fallback(req);
 				}
-			}(req);
+			};
 			req.setRequestHeader('Content-type','application/json');
 			req.send(JSON.stringify(data));
 		}
