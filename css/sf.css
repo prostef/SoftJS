@@ -1,9 +1,13 @@
-#sf-Alert {
+#sf-Alerts{
+    position: fixed;
+    right: 5px;
+    top: 5px;
+    max-width: 100%;
+    overflow: hidden;
+}
+#sf-Alerts .sf-Alert {
 	width: 300px;
-	position: fixed;
 	opacity: 0;
-	top: 5px;
-	right: 5px;
 	background-color: #FFF;
 	box-shadow: 2px -2px 5px #4C4C4C;
 	padding: 0 20px;
@@ -24,10 +28,10 @@
 	white-space: normal;
 	word-wrap: break-word;
 }
-#sf-Alert:hover {
+#sf-Alerts .sf-Alert:hover {
 	opacity: 1 !important;
 }
-#sf-Alert #sf-Alert-Title {
+#sf-Alerts .sf-Alert .sf-Alert-Title {
 	text-align: left;
 	padding: 10px 0;
 	font-size: 14pt;
@@ -35,7 +39,7 @@
 	font-family: inherit;
 	border-bottom:1px solid #808080;
 }
-#sf-Alert #sf-Alert-Content {
+#sf-Alerts .sf-Alert .sf-Alert-Content {
 	min-height: 40px;
 	text-align: left;
 	padding: 10px 0;
