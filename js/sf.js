@@ -281,26 +281,34 @@ var sf = (function(){
 
 	sf.alert = function(contentText, titleText, titleColor, fontFamily) {
 		self = this;
+		self.addCssFile('css/sf.css');
+		var timeOut;
 		var titleText = titleText ? titleText : 'Уведомление';
 		var titleColor = titleColor ? titleColor : '#000';
 		var contentText = contentText ? contentText : '...';
-		self.addCssFile('css/sf.css');
-		self('#sf-Alert')[0] ? [clearTimeout(self.timeOut), self.rmNode(self('#sf-Alert')[0])] : '';
+		var fontFamily = fontFamily ? fontFamily : '';
 
-		mainWindow = self.newNode('div');
-		mainWindow.id = 'sf-Alert';
-		mainWindow.style['font-family'] = fontFamily ? fontFamily : '';
-		mainWindow.onclick = function () {
-			clearTimeout(self.timeOut);
-			self.rmNode(self('#sf-Alert')[0]);
+		var mainWindow = self('#sf-Alerts')[0];
+		!mainWindow && function(){
+			mainWindow = self.newNode('div');
+			mainWindow.id = 'sf-Alerts';
+			self.addNode(mainWindow);
+		}();
+
+		var item = self.newNode('div');
+		item.className = 'sf-Alert';
+		item.onclick = function () {
+			clearTimeout(timeOut);
+			self.rmNode(item);
 		};
-		mainWindow.innerHTML = '<h1 id="sf-Alert-Title" style="color: ' + titleColor + ';">' + titleText + '</h1><div id="sf-Alert-Content">' + contentText + '</div>';
-		self.addNode(mainWindow);
-		self('#sf-Alert').css.opacity='0.9';
-		self.timeOut = setTimeout(
+		item.style.fontFamily = fontFamily;
+		item.style.opacity='0.9';
+		item.innerHTML = '<h1 class="sf-Alert-Title" style="color: ' + titleColor + ';">' + titleText + '</h1><div class="sf-Alert-Content">' + contentText + '</div>';
+		self.addNode(item);
+		timeOut = setTimeout(
 			function () {
-				self('#sf-Alert').css.opacity='0';
-				setTimeout(function () {self.rmNode(mainWindow);}, 300);
+				item.style.opacity='0';
+				setTimeout(function () {self.rmNode(item);}, 300);
 			},
 			5000
 		);
