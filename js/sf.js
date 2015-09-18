@@ -41,14 +41,6 @@ var sf = (function(){
 			});
 		}
 
-		// rmNode
-
-		this.rmNode = function(){
-			sortOut(this, function (obj) {
-				obj.parentNode.removeChild(obj);
-			});
-		}
-
 		// inner
 
 		this.getInner = function(){
@@ -240,6 +232,14 @@ var sf = (function(){
 		else if (typeof(fallback) == 'function') fallback(req);
 	}
 
+	sf.changeURL = function (url) {
+		var reg = /\/?\?(.*)$/;
+		(matches = url.match(reg)) && matches[1] ? (function(){
+			history.pushState(null, null, '?' + matches[1]);
+			history.replaceState(null, null, '?' + matches[1]);
+		})() : '';
+	}
+
 	sf.ajax.json = function(dst,data,callback,fallback){
 		var dst = (dst && typeof(dst)=='string') ? dst : '/';
 		var data = (data && typeof(data)=='object') ? data : {};
@@ -262,13 +262,25 @@ var sf = (function(){
 		return node ? document.createElement(node) : false;
 	}
 
-	sf.addNode = function(child, parent) {
-		parent = parent ? parent : document.body;
-		child ? parent.appendChild(child) : false;
+	sf.cloneNode = function (node) {
+		return node ? node.cloneNode(true) : false;
 	}
 
-	sf.rmNode = function(child) {
-		child ? child.parentNode.removeChild(child) : false;
+	sf.addNode = function(node, parent) {
+		parent = parent ? parent : document.body;
+		node ? parent.appendChild(node) : false;
+	}
+
+	sf.addNodeBefore = function(node, beforeNode) {
+		node && beforeNode ? beforeNode.parentNode.insertBefore(node, beforeNode) : false;
+	}
+
+	sf.rmNode = function(node) {
+		node ? node.parentNode.removeChild(node) : false;
+	}
+
+	sf.getNodeInfo = function(node) {
+		return node ? node.getBoundingClientRect() : false;
 	}
 
 	sf.addCssFile = function(path) {
@@ -283,9 +295,9 @@ var sf = (function(){
 		self = this;
 		self.addCssFile('css/sf.css');
 		var timeOut;
-		var titleText = titleText ? titleText : 'Уведомление';
-		var titleColor = titleColor ? titleColor : '#000';
-		var contentText = contentText ? contentText : '...';
+		var titleColor = titleColor ? titleColor : '#3B414F';
+		var titleText = titleText ? '<h1 class="sf-Alert-Title" style="color: ' + titleColor + ';">' + titleText + '</h1>' : '';
+		var contentText = contentText ? '<div class="sf-Alert-Content">' + contentText + '</div>' : '';
 		var fontFamily = fontFamily ? fontFamily : '';
 
 		var mainWindow = self('#sf-Alerts')[0];
@@ -302,9 +314,9 @@ var sf = (function(){
 			self.rmNode(item);
 		};
 		item.style.fontFamily = fontFamily;
-		item.style.opacity='0.9';
-		item.innerHTML = '<h1 class="sf-Alert-Title" style="color: ' + titleColor + ';">' + titleText + '</h1><div class="sf-Alert-Content">' + contentText + '</div>';
-		self.addNode(item);
+		item.style.opacity='0.97';
+		item.innerHTML = titleText+contentText;
+		self.addNode(item,mainWindow);
 		timeOut = setTimeout(
 			function () {
 				item.style.opacity='0';

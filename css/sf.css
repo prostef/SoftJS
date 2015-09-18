@@ -1,17 +1,15 @@
 #sf-Alerts{
-    position: fixed;
-    right: 5px;
-    top: 5px;
-    max-width: 100%;
-    overflow: hidden;
+        position: fixed;
+	right: 5px;
+	top: 5px;
+	z-index: 1000;
 }
 #sf-Alerts .sf-Alert {
 	width: 300px;
 	opacity: 0;
 	background-color: #FFF;
-	box-shadow: 2px -2px 5px #4C4C4C;
+	box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.3);
 	padding: 0 20px;
-	z-index: 10000;
 	outline: none;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
@@ -24,9 +22,10 @@
 	-khtml-user-select: none;
 	-webkit-user-select: none;
 	user-select: none;
-	cursor: default;
+	cursor: pointer;
 	white-space: normal;
 	word-wrap: break-word;
+	margin-bottom: 15px;
 }
 #sf-Alerts .sf-Alert:hover {
 	opacity: 1 !important;
@@ -37,13 +36,14 @@
 	font-size: 14pt;
 	font-weight: bold;
 	font-family: inherit;
-	border-bottom:1px solid #808080;
+	border-bottom: 1px solid #808080;
+	margin: 0;
 }
 #sf-Alerts .sf-Alert .sf-Alert-Content {
-	min-height: 40px;
 	text-align: left;
-	padding: 10px 0;
+	padding: 15px 0;
 	font-size: 12pt;
+	color: #404040;
 	font-family: inherit;
 }
 
