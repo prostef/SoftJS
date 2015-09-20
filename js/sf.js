@@ -222,41 +222,42 @@ var sf = (function(){
 
 	// General methods
 
-	sf.ajax = function (dst, fd, callback, fallback) {
-		if (typeof(dst) != 'string') return false;
-		if (typeof(fd) != 'object') return false;
-		if ((fd.constructor.name && fd.constructor.name != 'FormData') && fd.constructor != FormData) fd = new FormData(fd);
-		var req = new XMLHttpRequest();
-		if (req.readyState == 4 || req.readyState == 0) {
-			req.open('POST', dst, true);
-			req.onreadystatechange = function(){
-				if (req.readyState == 4) {
-					if (req.status == 200 && typeof(callback) == 'function') callback(req);
-					else if (typeof(fallback) == 'function') fallback(req);
-				}
-			};
-			req.send(fd);
-		}
-		else if (typeof(fallback) == 'function') fallback(req);
-	}
+	sf.ajax = (function(){
 
-	sf.ajax.json = function(dst,data,callback,fallback){
-		var dst = (dst && typeof(dst)=='string') ? dst : '/';
-		var data = (data && typeof(data)=='object') ? data : {};
-		var req = new XMLHttpRequest();
-		if (req.readyState == 4 || req.readyState == 0) {
-			req.open('POST', dst, true);
-			req.onreadystatechange = function(){
-				if (req.readyState == 4) {
-					if (req.status == 200 && typeof(callback) == 'function') callback(req);
-					else if (typeof(fallback) == 'function') fallback(req);
-				}
-			};
-			req.setRequestHeader('Content-type','application/json');
-			req.send(JSON.stringify(data));
+		var ajax = function(data){
+			data.dst = (data.dst && typeof(data.dst) == 'string') ? data.dst : '/';
+			data.callback = (data.callback && typeof(data.callback) == 'function') ? data.callback : false;
+			data.fallback = (data.fallback && typeof(data.fallback) == 'function') ? data.fallback : false;
+			data.method = (data.method && typeof(data.method) == 'string') ? data.method : 'POST';
+			data.headers = (data.headers && typeof(data.headers) == 'object') ? data.headers : {};
+
+			var req = new XMLHttpRequest();
+			return (req.readyState == 4 || req.readyState == 0) ? (function(){
+				req.open(data.method, data.dst, true);
+				req.onreadystatechange = function(){
+					req.readyState == 4 && req.status == 200
+					? (data.callback && data.callback(req))
+					: (data.fallback && data.fallback(req));
+				};
+				for(h in data.headers) req.setRequestHeader(h, data.headers[h]);
+				return req;
+			})() : (data.fallback ? data.fallback(req) : false);
 		}
-		else if (typeof(fallback) == 'function') fallback(req);
-	}
+
+		ajax.json = function(dst, body, callback, fallback){
+			var body = (body && typeof(body)=='object') ? body: {};
+			var data = {
+				dst: dst,
+				callback: callback,
+				fallback: fallback,
+				headers: {'Content-type': 'application/json'} 
+			}
+			var req = this(data);
+			req && req.send(JSON.stringify(body));
+		}
+
+		return ajax;
+	})();
 
 	sf.newNode = function(node) {
 		return node ? document.createElement(node) : false;
