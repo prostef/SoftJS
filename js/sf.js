@@ -227,9 +227,11 @@ var sf = (function(){
 			return (req.readyState == 4 || req.readyState == 0) ? (function(){
 				req.open(data.method, data.dst, true);
 				req.onreadystatechange = function(){
-					req.readyState == 4 && req.status == 200
-					? (data.callback && data.callback(req))
-					: (data.fallback && data.fallback(req));
+					req.readyState == 4 && (function(){
+						req.status == 200
+						? (data.callback && data.callback(req))
+						: (data.fallback && data.fallback(req));
+					})();
 				};
 				for(h in data.headers) req.setRequestHeader(h, data.headers[h]);
 				return req;
@@ -242,7 +244,7 @@ var sf = (function(){
 				dst: dst,
 				callback: callback,
 				fallback: fallback,
-				headers: {'Content-type': 'application/json'} 
+				headers: {'Content-type': 'application/json'}
 			}
 			var req = this(data);
 			req && req.send(JSON.stringify(body));
