@@ -234,6 +234,7 @@ var sf = (function(){
 					})();
 				};
 				for(h in data.headers) req.setRequestHeader(h, data.headers[h]);
+				req.setRequestHeader('X-REQUESTED-WITH', 'XMLHttpRequest');
 				return req;
 			})() : (data.fallback ? data.fallback(req) : false);
 		}
