@@ -127,6 +127,7 @@ var sf = (function() {
 		// events
 		this.addEv = function(ev, func, capt) {
 			sortOut(this, function(obj) {
+				var capt = capt ? capt : false;
 				obj.addEventListener(ev, func, capt);
 			});
 			return func;
@@ -134,6 +135,7 @@ var sf = (function() {
 
 		this.rmEv = function(ev, func, capt) {
 			sortOut(this, function (obj) {
+				var capt = capt ? capt : false;
 				obj.removeEventListener(ev, func, capt);
 			});
 		}
@@ -229,10 +231,11 @@ var sf = (function() {
 		return object;
 	};
 
-	var sf = function(selector) {
+	var sf = function(selector, parent) {
 		Actions.prototype = Array.prototype;
 		var object = mixins(inherit(new Actions));
-		var nodeArray = [].slice.call(typeof(selector) != 'string' ? [selector] : document.querySelectorAll(selector));
+		var parent = parent ? parent : document;
+		var nodeArray = [].slice.call(typeof(selector) != 'string' ? [selector] : parent.querySelectorAll(selector));
 
 		for (var i = 0; i != nodeArray.length; i++) {
 			object.push(nodeArray[i]);
@@ -240,188 +243,6 @@ var sf = (function() {
 
 		return object;
 	};
-
-	// Убрать в другой файл
-
-	sf.ajax = (function(){
-
-		var ajax = function(data){
-			data.dst = (data.dst && typeof(data.dst) == 'string') ? data.dst : '/';
-			data.callback = (data.callback && typeof(data.callback) == 'function') ? data.callback : false;
-			data.fallback = (data.fallback && typeof(data.fallback) == 'function') ? data.fallback : false;
-			data.method = (data.method && typeof(data.method) == 'string') ? data.method : 'POST';
-			data.headers = (data.headers && typeof(data.headers) == 'object') ? data.headers : {};
-
-			var req = new XMLHttpRequest();
-			return (req.readyState == 4 || req.readyState == 0) ? (function(){
-				req.open(data.method, data.dst, true);
-				req.onreadystatechange = function(){
-					req.readyState == 4 && (function(){
-						req.status == 200
-						? (data.callback && data.callback(req))
-						: (data.fallback && data.fallback(req));
-					})();
-				};
-				for(h in data.headers) req.setRequestHeader(h, data.headers[h]);
-				req.setRequestHeader('X-REQUESTED-WITH', 'XMLHttpRequest');
-				return req;
-			})() : (data.fallback ? data.fallback(req) : false);
-		}
-
-		ajax.json = function(dst, body, callback, fallback){
-			var body = (body && typeof(body)=='object') ? body: {};
-			var data = {
-				dst: dst,
-				callback: callback,
-				fallback: fallback,
-				headers: {'Content-type': 'application/json'}
-			}
-			var req = this(data);
-			req && req.send(JSON.stringify(body));
-		}
-
-		return ajax;
-	})();
-
-	sf.changeURL = function (url) {
-		var reg = /\/?\?(.*)$/;
-		(matches = url.match(reg)) && matches[1] ? (function(){
-			history.pushState(null, null, '?' + matches[1]);
-			history.replaceState(null, null, '?' + matches[1]);
-		})() : '';
-	}
-
-	sf.newNode = function(node) {
-		return node ? document.createElement(node) : false;
-	}
-
-	sf.cloneNode = function (node) {
-		return node ? node.cloneNode(true) : false;
-	}
-
-	sf.addNode = function(node, parent) {
-		parent = parent ? parent : document.body;
-		node ? parent.appendChild(node) : false;
-	}
-
-	sf.addNodeBefore = function(node, beforeNode) {
-		node && beforeNode ? beforeNode.parentNode.insertBefore(node, beforeNode) : false;
-	}
-
-	sf.rmNode = function(node) {
-		node ? node.parentNode.removeChild(node) : false;
-	}
-
-	sf.getNodeInfo = function(node) {
-		return node ? node.getBoundingClientRect() : false;
-	}
-
-	sf.addCssFile = function(path) {
-		var node = this.newNode('link');
-		this(node).attr('rel', 'stylesheet');
-		this(node).attr('type', 'text/css');
-		this(node).attr('href', path);
-		this('head > link[href="' + path + '"]')[0] ? false : this.addNode(node, document.head);
-	}
-
-	sf.alert = function(contentText, titleText, titleColor, fontFamily) {
-		self = this;
-		self.addCssFile('css/sf.css');
-		var timeOut;
-		var titleColor = titleColor ? titleColor : '#3B414F';
-		var titleText = titleText ? '<h1 class="sf-Alert-Title" style="color: ' + titleColor + ';">' + titleText + '</h1>' : '';
-		var contentText = contentText ? '<div class="sf-Alert-Content">' + contentText + '</div>' : '';
-		var fontFamily = fontFamily ? fontFamily : '';
-
-		var mainWindow = self('#sf-Alerts')[0];
-		!mainWindow && function(){
-			mainWindow = self.newNode('div');
-			mainWindow.id = 'sf-Alerts';
-			self.addNode(mainWindow);
-		}();
-
-		var item = self.newNode('div');
-		item.className = 'sf-Alert';
-		item.onclick = function () {
-			clearTimeout(timeOut);
-			self.rmNode(item);
-		};
-		item.style.fontFamily = fontFamily;
-		item.style.opacity='0.97';
-		item.innerHTML = titleText+contentText;
-		self.addNode(item,mainWindow);
-		timeOut = setTimeout(
-			function () {
-				item.style.opacity='0';
-				setTimeout(function () {self.rmNode(item);}, 300);
-			},
-			5000
-		);
-	}
-
-	sf.zoomImg = function(src, srcLoader) {
-		self = this;
-		self.addCssFile('css/sf.css');
-		self('#sf-popupContainer')[0] ? self.rmNode(self('#sf-popupContainer')[0]) : '';
-		src && (function(){
-			popupWindow = self.newNode('div');
-			style = srcLoader ? 'style="background-image: url(' + srcLoader + ');"' : '';
-			popupWindow.id = 'sf-popupContainer';
-			popupWindow.innerHTML = '<div id="sf-popupLine" ' + style + '></div><div id="sf-popupContent"><img id="sf-popupImg" src=""></div>';
-			popupWindow.onclick = function (event) {
-				var event = event ? event : window.event;
-				event.target.id == popupWindow.id ? self.rmNode(popupWindow) : '';
-			};
-			self.addNode(popupWindow);
-			setTimeout(function () {
-				self('#sf-popupImg').attr('src', src);
-			}, 100);
-		})();
-	}
-
-	sf.animate = (function(){
-		var animate = function(struct){
-			var start = performance.now();
-			requestAnimationFrame(function req(time) {
-
-				// timeFraction от 0 до 1
-				var timeFraction = (time - start) / struct.duration;
-				(timeFraction > 1) && (timeFraction = 1);
-
-				// текущее состояние анимации
-				var progress = struct.timing(timeFraction)
-
-				struct.draw((progress * 100));
-
-				(timeFraction < 1) && requestAnimationFrame(req);
-
-			});
-		}
-
-		animate.linear = function(struct){
-			struct.timing = function(timeFraction){return timeFraction;}
-			this(struct);
-		}
-
-		animate.cubic = function(struct, coords){
-			var coords = coords ? coords : [0.65,0.05,0.36,1];
-			var p1 = [0,0];
-			var p2 = [coords[0],coords[1]];
-			var p3 = [coords[2],coords[3]];
-			var p4 = [1,1];
-
-			struct.timing = function(timeFraction){
-				var x = (Math.pow((1-timeFraction),3)*p1[0]) + (3*Math.pow((1-timeFraction),2)*timeFraction*p2[0]);
-				x = x + (3*(1-timeFraction)*Math.pow(timeFraction,2)*p3[0]) + (Math.pow(timeFraction,3)*p4[0]);
-				var y= (Math.pow((1-timeFraction),3)*p1[1]) + (3*Math.pow((1-timeFraction),2)*timeFraction*p2[1]);
-				y = y + (3*(1-timeFraction)*Math.pow(timeFraction,2)*p3[1]) + (Math.pow(timeFraction,3)*p4[1]);
-				return y;
-			}
-			this(struct);
-		}
-
-		return animate;
-	})();
 
 	return sf;
 })();
