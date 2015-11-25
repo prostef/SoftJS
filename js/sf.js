@@ -1,98 +1,83 @@
-var sf = (function(){
+var sf = (function() {
+	var Actions = function() {
 
-	// Methods
-
-	var actions = function(nodeList){
-
-		// attr
-
-		this.attr=function(at, val){
+		// attributes
+		this.attr = function(at, val) {
 			return typeof(val) != 'undefined' ? this.setAttr(at, val) : this.getAttr(at);
 		}
 
-		this.setAttr=function(at, val){
-			sortOut(this,function(el){
-				el.setAttribute(at,val);
+		this.setAttr = function(at, val) {
+			sortOut(this, function(el) {
+				el.setAttribute(at, val);
 			});
 		}
 
-		this.getAttr=function(at){
+		this.getAttr = function(at) {
 			var self = this;
-			return this.length == 1 ? this[0].getAttribute(at) : (function(){
-				var attr=[];
-				sortOut(self,function(el){
+			return this.length == 1 ? this[0].getAttribute(at) : (function() {
+				var attr = [];
+				sortOut(self, function(el) {
 					attr.push(el.getAttribute(at));
 				});
 				return attr.reverse();
 			})();
 		}
 
-		this.addAttr = function (at, val) {
+		this.addAttr = function(at, val) {
 			sortOut(this, function (obj) {
 				var v = obj.getAttribute(at) || val;
 				obj.setAttribute(at, v.match(val) ? v : v + ' ' + val);
 			});
 		}
 
-		this.rmAttr = function (at, val) {
+		this.rmAttr = function(at, val) {
 			sortOut(this, function (obj) {
 				var v = (obj.getAttribute(at) || val).replace(val, '').replace(/(^\s+|\s+$)/, '');
 				v ? obj.setAttribute(at, v) : obj.removeAttribute(at);
 			});
 		}
 
-		// rmNode
-
-		this.rmNode = function (){
-			sortOut(this, function (obj) {
-				obj.parentNode.removeChild(obj);
-			});
-		}
-
 		// inner
-
-		this.getInner = function(){
+		this.getInner = function() {
 			var self = this;
-			return this.length == 1 ? this[0].innerHTML : (function(){
+			return this.length == 1 ? this[0].innerHTML : (function() {
 				var inner = [];
-				sortOut(self, function(el){
+				sortOut(self, function(el) {
 					inner.push(el.innerHTML);
 				});
 				return inner.reverse();
 			})();
 		}
 
-		this.setInner = function(str){
+		this.setInner = function(str) {
 			sortOut(this, function(el){
 				el.innerHTML = str;
 			});
 		}
 
 		// class
-
-		this.getClass = function(){
+		this.getClass = function() {
 			var self = this;
-			return this.length == 1 ? this[0].className : (function(){
+			return this.length == 1 ? this[0].className : (function() {
 				var cls = [];
-				sortOut(self, function(el){
+				sortOut(self, function(el) {
 					cls.push(el.className);
 				});
 				return cls.reverse();
 			})();
 		}
 
-		this.setClass = function(str){
-			sortOut(this, function(el){
-				el.setAttribute('class',str);
+		this.setClass = function(str) {
+			sortOut(this, function(el) {
+				el.setAttribute('class', str);
 			});
 		}
 
 		// css
-
-		this.setCss = function(props){
+		this.setCss = function(props) {
 			var propsStr = '';
-			for(key in props)propsStr+=(key+':'+props[key]+';');
-			sortOut(this, function(el){
+			for (key in props) propsStr += (key + ':' + props[key] + ';');
+			sortOut(this, function(el) {
 				el.style.cssText = propsStr;
 			});
 		}
@@ -100,14 +85,13 @@ var sf = (function(){
 		this.getCss = function(){
 			var self = this;
 			var css = {};
-			sortOut(self, function(el){
-
-				for(key in el.style){
-					def.get(css, key, function(key){
-						return function(){
-							return self.length == 1 ? self[0].style[key] : (function(){
+			sortOut(self, function(el) {
+				for (key in el.style) {
+					def.get(css, key, function(key) {
+						return function() {
+							return self.length == 1 ? self[0].style[key] : (function() {
 								var tmp = [];
-								sortOut(self, function(el){
+								sortOut(self, function(el) {
 									tmp.push(el.style[key]);
 								});
 								return tmp.reverse();
@@ -115,9 +99,9 @@ var sf = (function(){
 						}
 					}(key));
 
-					def.set(css, key, function(key){
-						return function(val){
-							sortOut(self, function(el){
+					def.set(css, key, function(key) {
+						return function(val) {
+							sortOut(self, function(el) {
 								el.style[key] = val;
 							});
 						}
@@ -129,12 +113,11 @@ var sf = (function(){
 		}
 
 		// style
-
-		this.getStyle = function(){
+		this.getStyle = function() {
 			var self = this;
-			return this.length == 1 ? this[0].style.cssText : (function(){
+			return this.length == 1 ? this[0].style.cssText : (function() {
 				var style = [];
-				sortOut(self, function(el){
+				sortOut(self, function(el) {
 					style.push(el.style.cssText);
 				});
 				return style.reverse();
@@ -142,120 +125,198 @@ var sf = (function(){
 		}
 
 		// events
-
-		this.addEv = function (ev, func, capt) {
-			sortOut(this, function (obj) {
+		this.addEv = function(ev, func, capt) {
+			sortOut(this, function(obj) {
 				obj.addEventListener(ev, func, capt);
 			});
 			return func;
 		}
 
-		this.rmEv = function (ev, func, capt) {
+		this.rmEv = function(ev, func, capt) {
 			sortOut(this, function (obj) {
 				obj.removeEventListener(ev, func, capt);
 			});
 		}
 
-	}
+		// other
+		this.parent = function() {
+			return sf(this[0].parentNode);
+		}
 
-	// Setters and Getters
+		this.next = function() {
+			return this[0].nextElementSibling ? sf(this[0].nextElementSibling) : this.first();
+		}
+
+		this.prev = function() {
+			return this[0].previousElementSibling ? sf(this[0].previousElementSibling) : this.last();
+		}
+
+		this.first = function() {
+			return sf(this.parent()[0].firstElementChild);
+		}
+
+		this.last = function() {
+			return sf(this.parent()[this.length - 1].lastElementChild);
+		}
+
+		this.node = function() {
+			var node = this[0].nodeName.toLowerCase();
+			if (this[0].id) {
+				node += '#' + this[0].id;
+			} else if (this[0].className) {
+				node += '.' + this[0].className.split(' ').join('.');
+			}
+			return node;
+		}
+
+		this.cssPath = function() {
+			var path = this.node() + ' ';
+			var parent = this.parent();
+			while (true) {
+				if (!parent.node() || parent.node() == '#document') break;
+				path += parent.node() != 'html' ? parent.node() + ' ' : parent.node();
+				parent = parent.parent();
+			}
+			return path = path.split(' ').reverse().join(' > ');
+		}
+
+	};
 
 	var mixins = function(obj){
 
 		// inner
-
 		def.get(obj, 'inner' , obj.getInner);
-
 		def.set(obj, 'inner', obj.setInner);
 
 		// class
-
 		def.get(obj, 'class', obj.getClass);
-
 		def.set(obj, 'class', obj.setClass);
 
 		// css
-
 		def.set(obj, 'css', obj.setCss);
-
 		def.get(obj, 'css', obj.getCss);
 
 		// style
-
 		def.get(obj, 'style', obj.getStyle);
 
 		return obj;
-	}
-
-	// Private functions
+	};
 
 	var def = {
-		get:function(obj, prop, func){
+		get: function(obj, prop, func) {
 			Object.defineProperty(obj, prop, {
-				get:func,
-				configurable:true,
+				get: func,
+				configurable: true
 			});
 		},
-		set:function(obj, prop, func){
+		set: function(obj, prop, func) {
 			Object.defineProperty(obj, prop, {
-				set:func,
-				configurable:true,
+				set: func,
+				configurable: true
 			});
 		},
-	}
+	};
 
-	var sortOut = function (object, callback) {
+	var sortOut = function(object, callback) {
 		var i = object.length;
-		while(i--)callback(object[i]);
-	}
+		while (i--) callback(object[i]);
+	};
 
-	// General object
+	var inherit = function(proto) {
+		var nullF = function() {};
+		nullF.prototype = proto;
+		var object = new nullF;
+		return object;
+	};
 
-	var sf = function(arg, callback){
-		var Objects = Array.isArray(arg) ? arg : (function(){
-			return typeof(arg) != 'string' ? [arg] : document.querySelectorAll(arg);
-		})();
-		actions.prototype=Objects;
-		callback && sortOut(Objects, callback);
-		return mixins(new actions);
-	}
+	var sf = function(selector) {
+		Actions.prototype = Array.prototype;
+		var object = mixins(inherit(new Actions));
+		var nodeArray = [].slice.call(typeof(selector) != 'string' ? [selector] : document.querySelectorAll(selector));
 
-	// General methods
-
-	sf.ajax = function (dst, fd, callback, fallback) {
-		if (typeof(dst) != 'string') return false;
-		if (typeof(fd) != 'object') return false;
-		if ((fd.constructor.name && fd.constructor.name != 'FormData') && fd.constructor != FormData) fd = new FormData(fd);
-		var req = new XMLHttpRequest();
-		if (req.readyState == 4 || req.readyState == 0) {
-			req.open('POST', dst, true);
-			req.onreadystatechange = function (req) {
-				return function () {
-					if (req.readyState == 4) {
-						if (req.status == 200 && typeof(callback) == 'function') callback(req);
-						else if (typeof(fallback) == 'function') fallback(req);
-					}
-				}
-			}(req);
-			req.send(fd);
+		for (var i = 0; i != nodeArray.length; i++) {
+			object.push(nodeArray[i]);
 		}
-		else if (typeof(fallback) == 'function') fallback(req);
+
+		return object;
+	};
+
+	// Убрать в другой файл
+
+	sf.ajax = (function(){
+
+		var ajax = function(data){
+			data.dst = (data.dst && typeof(data.dst) == 'string') ? data.dst : '/';
+			data.callback = (data.callback && typeof(data.callback) == 'function') ? data.callback : false;
+			data.fallback = (data.fallback && typeof(data.fallback) == 'function') ? data.fallback : false;
+			data.method = (data.method && typeof(data.method) == 'string') ? data.method : 'POST';
+			data.headers = (data.headers && typeof(data.headers) == 'object') ? data.headers : {};
+
+			var req = new XMLHttpRequest();
+			return (req.readyState == 4 || req.readyState == 0) ? (function(){
+				req.open(data.method, data.dst, true);
+				req.onreadystatechange = function(){
+					req.readyState == 4 && (function(){
+						req.status == 200
+						? (data.callback && data.callback(req))
+						: (data.fallback && data.fallback(req));
+					})();
+				};
+				for(h in data.headers) req.setRequestHeader(h, data.headers[h]);
+				req.setRequestHeader('X-REQUESTED-WITH', 'XMLHttpRequest');
+				return req;
+			})() : (data.fallback ? data.fallback(req) : false);
+		}
+
+		ajax.json = function(dst, body, callback, fallback){
+			var body = (body && typeof(body)=='object') ? body: {};
+			var data = {
+				dst: dst,
+				callback: callback,
+				fallback: fallback,
+				headers: {'Content-type': 'application/json'}
+			}
+			var req = this(data);
+			req && req.send(JSON.stringify(body));
+		}
+
+		return ajax;
+	})();
+
+	sf.changeURL = function (url) {
+		var reg = /\/?\?(.*)$/;
+		(matches = url.match(reg)) && matches[1] ? (function(){
+			history.pushState(null, null, '?' + matches[1]);
+			history.replaceState(null, null, '?' + matches[1]);
+		})() : '';
 	}
 
-	sf.newNode = function (node) {
+	sf.newNode = function(node) {
 		return node ? document.createElement(node) : false;
 	}
 
-	sf.addNode = function (child, parent) {
+	sf.cloneNode = function (node) {
+		return node ? node.cloneNode(true) : false;
+	}
+
+	sf.addNode = function(node, parent) {
 		parent = parent ? parent : document.body;
-		child ? parent.appendChild(child) : false;
+		node ? parent.appendChild(node) : false;
 	}
 
-	sf.rmNode = function (child) {
-		child ? child.parentNode.removeChild(child) : false;
+	sf.addNodeBefore = function(node, beforeNode) {
+		node && beforeNode ? beforeNode.parentNode.insertBefore(node, beforeNode) : false;
 	}
 
-	sf.addCssFile = function (path) {
+	sf.rmNode = function(node) {
+		node ? node.parentNode.removeChild(node) : false;
+	}
+
+	sf.getNodeInfo = function(node) {
+		return node ? node.getBoundingClientRect() : false;
+	}
+
+	sf.addCssFile = function(path) {
 		var node = this.newNode('link');
 		this(node).attr('rel', 'stylesheet');
 		this(node).attr('type', 'text/css');
@@ -263,34 +324,42 @@ var sf = (function(){
 		this('head > link[href="' + path + '"]')[0] ? false : this.addNode(node, document.head);
 	}
 
-	sf.alert = function (contentText, titleText, titleColor, fontFamily) {
+	sf.alert = function(contentText, titleText, titleColor, fontFamily) {
 		self = this;
-		var titleText = titleText ? titleText : 'Уведомление';
-		var titleColor = titleColor ? titleColor : '#000';
-		var contentText = contentText ? contentText : '...';
 		self.addCssFile('css/sf.css');
-		self('#sf-Alert')[0] ? [clearTimeout(self.timeOut), self.rmNode(self('#sf-Alert')[0])] : '';
+		var timeOut;
+		var titleColor = titleColor ? titleColor : '#3B414F';
+		var titleText = titleText ? '<h1 class="sf-Alert-Title" style="color: ' + titleColor + ';">' + titleText + '</h1>' : '';
+		var contentText = contentText ? '<div class="sf-Alert-Content">' + contentText + '</div>' : '';
+		var fontFamily = fontFamily ? fontFamily : '';
 
-		mainWindow = self.newNode('div');
-		mainWindow.id = 'sf-Alert';
-		mainWindow.style['font-family'] = fontFamily ? fontFamily : '';
-		mainWindow.onclick = function () {
-			clearTimeout(self.timeOut);
-			self.rmNode(self('#sf-Alert')[0]);
+		var mainWindow = self('#sf-Alerts')[0];
+		!mainWindow && function(){
+			mainWindow = self.newNode('div');
+			mainWindow.id = 'sf-Alerts';
+			self.addNode(mainWindow);
+		}();
+
+		var item = self.newNode('div');
+		item.className = 'sf-Alert';
+		item.onclick = function () {
+			clearTimeout(timeOut);
+			self.rmNode(item);
 		};
-		mainWindow.innerHTML = '<h1 id="sf-Alert-Title" style="color: ' + titleColor + ';">' + titleText + '</h1><div id="sf-Alert-Content">' + contentText + '</div>';
-		self.addNode(mainWindow);
-		self('#sf-Alert').css.opacity='0.9';
-		self.timeOut = setTimeout(
+		item.style.fontFamily = fontFamily;
+		item.style.opacity='0.97';
+		item.innerHTML = titleText+contentText;
+		self.addNode(item,mainWindow);
+		timeOut = setTimeout(
 			function () {
-				self('#sf-Alert').css.opacity='0';
-				setTimeout(function () {self.rmNode(mainWindow);}, 300);
+				item.style.opacity='0';
+				setTimeout(function () {self.rmNode(item);}, 300);
 			},
 			5000
 		);
 	}
 
-	sf.zoomImg = function (src, srcLoader) {
+	sf.zoomImg = function(src, srcLoader) {
 		self = this;
 		self.addCssFile('css/sf.css');
 		self('#sf-popupContainer')[0] ? self.rmNode(self('#sf-popupContainer')[0]) : '';
@@ -310,6 +379,49 @@ var sf = (function(){
 		})();
 	}
 
-	return sf;
+	sf.animate = (function(){
+		var animate = function(struct){
+			var start = performance.now();
+			requestAnimationFrame(function req(time) {
 
+				// timeFraction от 0 до 1
+				var timeFraction = (time - start) / struct.duration;
+				(timeFraction > 1) && (timeFraction = 1);
+
+				// текущее состояние анимации
+				var progress = struct.timing(timeFraction)
+
+				struct.draw((progress * 100));
+
+				(timeFraction < 1) && requestAnimationFrame(req);
+
+			});
+		}
+
+		animate.linear = function(struct){
+			struct.timing = function(timeFraction){return timeFraction;}
+			this(struct);
+		}
+
+		animate.cubic = function(struct, coords){
+			var coords = coords ? coords : [0.65,0.05,0.36,1];
+			var p1 = [0,0];
+			var p2 = [coords[0],coords[1]];
+			var p3 = [coords[2],coords[3]];
+			var p4 = [1,1];
+
+			struct.timing = function(timeFraction){
+				var x = (Math.pow((1-timeFraction),3)*p1[0]) + (3*Math.pow((1-timeFraction),2)*timeFraction*p2[0]);
+				x = x + (3*(1-timeFraction)*Math.pow(timeFraction,2)*p3[0]) + (Math.pow(timeFraction,3)*p4[0]);
+				var y= (Math.pow((1-timeFraction),3)*p1[1]) + (3*Math.pow((1-timeFraction),2)*timeFraction*p2[1]);
+				y = y + (3*(1-timeFraction)*Math.pow(timeFraction,2)*p3[1]) + (Math.pow(timeFraction,3)*p4[1]);
+				return y;
+			}
+			this(struct);
+		}
+
+		return animate;
+	})();
+
+	return sf;
 })();
