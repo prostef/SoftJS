@@ -1,6 +1,7 @@
 var sf = (function() {
-	var Actions = function() {
 
+	var Actions = function() {
+		
 		// attributes
 		this.attr = function(at, val) {
 			return typeof(val) != 'undefined' ? this.setAttr(at, val) : this.getAttr(at);
@@ -184,6 +185,21 @@ var sf = (function() {
 
 	};
 
+	var magic = {
+		get: function(object, prop, func) {
+			Object.defineProperty(object, prop, {
+				get: func,
+				configurable: true
+			});
+		},
+		set: function(object, prop, func) {
+			Object.defineProperty(object, prop, {
+				set: func,
+				configurable: true
+			});
+		}
+	};
+
 	var addMagic = function(object) {
 
 		// inner
@@ -202,21 +218,6 @@ var sf = (function() {
 		magic.get(object, 'style', object.getStyle);
 
 		return object;
-	};
-
-	var magic = {
-		get: function(object, prop, func) {
-			Object.defineProperty(object, prop, {
-				get: func,
-				configurable: true
-			});
-		},
-		set: function(object, prop, func) {
-			Object.defineProperty(object, prop, {
-				set: func,
-				configurable: true
-			});
-		}
 	};
 
 	var sortOut = function(object, callback) {
