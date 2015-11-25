@@ -87,7 +87,7 @@ var sf = (function() {
 			var css = {};
 			sortOut(self, function(el) {
 				for (key in el.style) {
-					def.get(css, key, function(key) {
+					magic.get(css, key, function(key) {
 						return function() {
 							return self.length == 1 ? self[0].style[key] : (function() {
 								var tmp = [];
@@ -99,7 +99,7 @@ var sf = (function() {
 						}
 					}(key));
 
-					def.set(css, key, function(key) {
+					magic.set(css, key, function(key) {
 						return function(val) {
 							sortOut(self, function(el) {
 								el.style[key] = val;
@@ -184,39 +184,39 @@ var sf = (function() {
 
 	};
 
-	var mixins = function(obj){
+	var addMagic = function(object) {
 
 		// inner
-		def.get(obj, 'inner' , obj.getInner);
-		def.set(obj, 'inner', obj.setInner);
+		magic.get(object, 'inner' , object.getInner);
+		magic.set(object, 'inner', object.setInner);
 
 		// class
-		def.get(obj, 'class', obj.getClass);
-		def.set(obj, 'class', obj.setClass);
+		magic.get(object, 'class', object.getClass);
+		magic.set(object, 'class', object.setClass);
 
 		// css
-		def.set(obj, 'css', obj.setCss);
-		def.get(obj, 'css', obj.getCss);
+		magic.set(object, 'css', object.setCss);
+		magic.get(object, 'css', object.getCss);
 
 		// style
-		def.get(obj, 'style', obj.getStyle);
+		magic.get(object, 'style', object.getStyle);
 
-		return obj;
+		return object;
 	};
 
-	var def = {
-		get: function(obj, prop, func) {
-			Object.defineProperty(obj, prop, {
+	var magic = {
+		get: function(object, prop, func) {
+			Object.defineProperty(object, prop, {
 				get: func,
 				configurable: true
 			});
 		},
-		set: function(obj, prop, func) {
-			Object.defineProperty(obj, prop, {
+		set: function(object, prop, func) {
+			Object.defineProperty(object, prop, {
 				set: func,
 				configurable: true
 			});
-		},
+		}
 	};
 
 	var sortOut = function(object, callback) {
@@ -233,7 +233,7 @@ var sf = (function() {
 
 	var sf = function(selector, parent) {
 		Actions.prototype = Array.prototype;
-		var object = mixins(inherit(new Actions));
+		var object = addMagic(inherit(new Actions));
 		var parent = parent ? parent : document;
 		var nodeArray = [].slice.call(typeof(selector) != 'string' ? [selector] : parent.querySelectorAll(selector));
 
