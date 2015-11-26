@@ -1,8 +1,89 @@
 var sf = (function() {
 
 	var Actions = function() {
-		
-		// attributes
+
+		// inner magic
+		this.getInner = function() {
+			var self = this;
+			return this.length == 1 ? this[0].innerHTML : (function() {
+				var inner = [];
+				sortOut(self, function(el) {
+					inner.push(el.innerHTML);
+				});
+				return inner.reverse();
+			})();
+		}
+
+		this.setInner = function(str) {
+			sortOut(this, function(el){
+				el.innerHTML = str;
+			});
+		}
+
+		// class magic
+		this.getClass = function() {
+			var self = this;
+			return this.length == 1 ? this[0].className : (function() {
+				var cls = [];
+				sortOut(self, function(el) {
+					cls.push(el.className);
+				});
+				return cls.reverse();
+			})();
+		}
+
+		this.setClass = function(str) {
+			sortOut(this, function(el) {
+				el.setAttribute('class', str);
+			});
+		}
+
+		// style magic
+		this.getStyle = function() {
+			var self = this;
+			return this.length == 1 ? (function(){
+				var arr = self[0].style.cssText.split(';');
+				return arr.slice(0, arr.length - 1);
+			})() : (function() {
+				var style = [];
+				sortOut(self, function(el) {
+					style.push(el.style.cssText);
+				});
+				return style.reverse();
+			})();
+		}
+
+		this.setStyle = function(props) {
+			var propsStr = '';
+			for (key in props) propsStr += (key + ':' + props[key] + ';');
+			sortOut(this, function(el) {
+				el.style.cssText = propsStr;
+			});
+		}
+
+		// css
+		this.css = function(at, val) {
+			return typeof(val) != 'undefined' ? this.setCss(at, val) : this.getCss(at);
+		}
+
+		this.getCss = function(at) {
+			var self = this;
+			return this.length == 1 ? this[0].style[at] : (function() {
+				var inner = [];
+				sortOut(self, function(el) {
+					inner.push(el.style[at]);
+				});
+				return inner.reverse();
+			})();
+		}
+
+		this.setCss = function(at, val) {
+			sortOut(this, function(el) {
+				el.style[at] = val;
+			});
+		}
+
+		// attr
 		this.attr = function(at, val) {
 			return typeof(val) != 'undefined' ? this.setAttr(at, val) : this.getAttr(at);
 		}
@@ -35,115 +116,6 @@ var sf = (function() {
 			sortOut(this, function (obj) {
 				var v = (obj.getAttribute(at) || val).replace(val, '').replace(/(^\s+|\s+$)/, '');
 				v ? obj.setAttribute(at, v) : obj.removeAttribute(at);
-			});
-		}
-
-		// inner
-		this.getInner = function() {
-			var self = this;
-			return this.length == 1 ? this[0].innerHTML : (function() {
-				var inner = [];
-				sortOut(self, function(el) {
-					inner.push(el.innerHTML);
-				});
-				return inner.reverse();
-			})();
-		}
-
-		this.setInner = function(str) {
-			sortOut(this, function(el){
-				el.innerHTML = str;
-			});
-		}
-
-		// class
-		this.getClass = function() {
-			var self = this;
-			return this.length == 1 ? this[0].className : (function() {
-				var cls = [];
-				sortOut(self, function(el) {
-					cls.push(el.className);
-				});
-				return cls.reverse();
-			})();
-		}
-
-		this.setClass = function(str) {
-			sortOut(this, function(el) {
-				el.setAttribute('class', str);
-			});
-		}
-
-		// css
-		
-		this.getCss = function(at){
-			var self = this;
-			return this.length == 1 ? this[0].style[at] : (function() {
-				var inner = [];
-				sortOut(self, function(el) {
-					inner.push(el.style[at]);
-				});
-				return inner.reverse();
-			})();
-		}
-		
-		this.setCss = function(at, val){
-			sortOut(this, function(el){
-				el.style[at] = val;
-			});
-		}
-		
-		this.css = function(at, val){
-			return typeof(val) != 'undefined' ? this.setCss(at, val) : this.getCss(at);
-		}
-
-		this.getCss = function(){
-			var self = this;
-			var css = {};
-			sortOut(self, function(el) {
-				for (key in el.style) {
-					magic.get(css, key, function(key) {
-						return function() {
-							return self.length == 1 ? self[0].style[key] : (function() {
-								var tmp = [];
-								sortOut(self, function(el) {
-									tmp.push(el.style[key]);
-								});
-								return tmp.reverse();
-							})();
-						}
-					}(key));
-
-					magic.set(css, key, function(key) {
-						return function(val) {
-							sortOut(self, function(el) {
-								el.style[key] = val;
-							});
-						}
-					}(key));
-				}
-
-			});
-			return css;
-		}
-
-		// style
-		this.getStyle = function() {
-			var self = this;
-			return this.length == 1 ? this[0].style.cssText : (function() {
-				var style = [];
-				sortOut(self, function(el) {
-					style.push(el.style.cssText);
-				});
-				return style.reverse();
-			})();
-		}
-		
-		this.setStyle = function(props) {
-			var propsStr = '';
-			for (key in props) propsStr += (key + ':' + props[key] + ';');
-			sortOut(this, function(el) {
-				el.style.cssText = propsStr;
 			});
 		}
 
@@ -207,6 +179,7 @@ var sf = (function() {
 
 	};
 
+	// magic
 	var magic = {
 		get: function(object, prop, func) {
 			Object.defineProperty(object, prop, {
@@ -234,10 +207,12 @@ var sf = (function() {
 
 		// style
 		magic.get(object, 'style', object.getStyle);
+		magic.set(object, 'style', object.setStyle);
 
 		return object;
 	};
 
+	// core
 	var sortOut = function(object, callback) {
 		var i = object.length;
 		while (i--) callback(object[i]);
@@ -262,6 +237,28 @@ var sf = (function() {
 
 		return object;
 	};
+
+	sf.ready = function(callback) {
+		sf(document).addEv('readystatechange', function() {
+			(document.readyState == 'complete') && callback();
+		});
+	}
+
+	// incudes
+	sf.require = function(path) {
+		var node = document.createElement('script');
+		this(node).attr('type', 'text/javascript');
+		this(node).attr('src', path);
+		this('script[src="' + path + '"]')[0] ? false : document.body.appendChild(node);
+	}
+
+	sf.requireCss = function(path) {
+		var node = document.createElement('link');
+		this(node).attr('rel', 'stylesheet');
+		this(node).attr('type', 'text/css');
+		this(node).attr('href', path);
+		this('head > link[href="' + path + '"]')[0] ? false : document.head.appendChild(node);
+	}
 
 	return sf;
 })();

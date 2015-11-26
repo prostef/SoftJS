@@ -1,6 +1,7 @@
+sf.require('js/sf-nodes.js');
+sf.requireCss('css/sf.css');
 sf.alert = function(contentText, titleText, titleColor, fontFamily) {
 	self = this;
-	self.addCssFile('css/sf.css');
 	var timeOut;
 	var titleColor = titleColor ? titleColor : '#3B414F';
 	var titleText = titleText ? '<h1 class="sf-Alert-Title" style="color: ' + titleColor + ';">' + titleText + '</h1>' : '';

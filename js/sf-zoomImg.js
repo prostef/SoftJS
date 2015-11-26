@@ -1,6 +1,7 @@
+sf.require('js/sf-nodes.js');
+sf.requireCss('css/sf.css');
 sf.zoomImg = function(src, srcLoader) {
 	self = this;
-	self.addCssFile('css/sf.css');
 	self('#sf-popupContainer')[0] ? self.rmNode(self('#sf-popupContainer')[0]) : '';
 	src && (function(){
 		popupWindow = self.newNode('div');
