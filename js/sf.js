@@ -43,7 +43,8 @@ var sf = (function() {
 			var self = this;
 			return this.length == 1 ? (function(){
 				var arr = self[0].style.cssText.split(';');
-				return arr.slice(0, arr.length - 1);
+				arr.pop();
+				return arr;
 			})() : (function() {
 				var style = [];
 				sortOut(self, function(el) {
