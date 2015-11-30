@@ -141,6 +141,14 @@ var sf = (function() {
 			return sf(this[0].parentNode);
 		}
 
+		this.children = function() {
+			return sf(this.stringNode() + ' > *');
+		}
+
+		this.index = function() {
+			return this.parent().children().indexOf(this[0]);
+		}
+
 		this.next = function() {
 			return this[0].nextElementSibling ? sf(this[0].nextElementSibling) : this.first();
 		}
@@ -157,7 +165,7 @@ var sf = (function() {
 			return sf(this.parent()[this.length - 1].lastElementChild);
 		}
 
-		this.node = function() {
+		this.stringNode = function() {
 			var node = this[0].nodeName.toLowerCase();
 			if (this[0].id) {
 				node += '#' + this[0].id;
@@ -168,11 +176,11 @@ var sf = (function() {
 		}
 
 		this.cssPath = function() {
-			var path = this.node() + ' ';
+			var path = this.stringNode() + ' ';
 			var parent = this.parent();
 			while (true) {
-				if (!parent.node() || parent.node() == '#document') break;
-				path += parent.node() != 'html' ? parent.node() + ' ' : parent.node();
+				if (!parent.stringNode() || parent.stringNode() == '#document') break;
+				path += parent.stringNode() != 'html' ? parent.stringNode() + ' ' : parent.stringNode();
 				parent = parent.parent();
 			}
 			return path = path.split(' ').reverse().join(' > ');
@@ -229,7 +237,7 @@ var sf = (function() {
 	var sf = function(selector, parent) {
 		Actions.prototype = Array.prototype;
 		var object = addMagic(inherit(new Actions));
-		var parent = parent ? parent : document;
+		var parent = parent ? (parent.length ? parent[0] : parent) : document;
 		var nodeArray = [].slice.call(typeof(selector) != 'string' ? [selector] : parent.querySelectorAll(selector));
 
 		for (var i = 0; i != nodeArray.length; i++) {

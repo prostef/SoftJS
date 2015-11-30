@@ -1,5 +1,7 @@
-sf.require('js/sf-nodes.js');
-sf.requireCss('css/sf.css');
+sf.ready(function() {
+	sf.require('js/sf-nodes.js');
+	sf.requireCss('css/sf.css');
+});
 sf.alert = function(contentText, titleText, titleColor, fontFamily) {
 	self = this;
 	var timeOut;
