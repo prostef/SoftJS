@@ -186,6 +186,8 @@ var sf = (function() {
 			return path = path.split(' ').reverse().join(' > ');
 		}
 
+		this.each = function(callback) { sortOut(this, callback); }
+
 	};
 
 	// magic
@@ -222,9 +224,10 @@ var sf = (function() {
 	};
 
 	// core
+
 	var sortOut = function(object, callback) {
 		var i = object.length;
-		while (i--) callback(object[i]);
+		while (i--) { callback.apply(object[i], [object[i]]); }
 	};
 
 	var inherit = function(proto) {
