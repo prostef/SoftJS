@@ -254,12 +254,6 @@ var sf = (function() {
 	}
 
 	// incudes
-	sf.require = function(path) {
-		var node = document.createElement('script');
-		this(node).attr('type', 'text/javascript');
-		this(node).attr('src', path);
-		this('script[src="' + path + '"]')[0] ? false : document.body.appendChild(node);
-	}
 
 	sf.requireCss = function(path) {
 		var node = document.createElement('link');

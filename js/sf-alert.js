@@ -1,8 +1,5 @@
-sf.ready(function() {
-	sf.require('js/sf-nodes.js');
-	sf.requireCss('css/sf.css');
-});
 sf.alert = function(contentText, titleText, titleColor, fontFamily) {
+	sf.requireCss('css/sf.css');
 	self = this;
 	var timeOut;
 	var titleColor = titleColor ? titleColor : '#3B414F';

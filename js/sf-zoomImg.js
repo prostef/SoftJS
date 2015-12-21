@@ -1,8 +1,5 @@
-sf.ready(function() {
-	sf.require('js/sf-nodes.js');
-	sf.requireCss('css/sf.css');
-});
 sf.zoomImg = function(src, srcLoader) {
+	sf.requireCss('css/sf.css');
 	self = this;
 	self('#sf-popupContainer')[0] ? self.rmNode(self('#sf-popupContainer')[0]) : '';
 	src && (function(){
