@@ -1,11 +1,79 @@
 var sf = (function() {
 
-	var Actions = function() {
+	// core
+	var sf = function(selector, parent) {
+		Methods.prototype = Array.prototype;
+		var tmp = inherit(new Methods);
+		var object = addMagic(tmp);
+		var parent = parent ? (parent.length ? parent[0] : parent) : document;
+		var nodesArray = [].slice.call( typeof(selector) != 'string' ? [ selector ] : parent.querySelectorAll(selector) );
+
+		for (var i = 0; i != nodesArray.length; i++) {
+			object.push(nodesArray[i]);
+		}
+
+		return object;
+	};
+
+	var inherit = function(proto) {
+		var nullF = function() {};
+		nullF.prototype = proto;
+		var object = new nullF;
+		return object;
+	};
+
+	var sortOut = function(object, callback) {
+		var i = object.length;
+		while (i--) { callback.apply(object[i], [ object[i] ]); }
+	};
+
+	sf.ready = function(callback, context) {
+		var context = (context && typeof(context) == 'object') ? context : window;
+		(document.readyState == 'complete') ? callback.apply(context) : sf(document).addEv('readystatechange', function() {
+			(document.readyState == 'complete') && callback.apply(context);
+		});
+	}
+
+	// magic
+	var magic = {
+		get: function(object, prop, func) {
+			Object.defineProperty(object, prop, {
+				get: func,
+				configurable: true
+			});
+		},
+		set: function(object, prop, func) {
+			Object.defineProperty(object, prop, {
+				set: func,
+				configurable: true
+			});
+		}
+	};
+
+	var addMagic = function(object) {
+
+		// inner
+		magic.get(object, 'inner' , object.getInner);
+		magic.set(object, 'inner', object.setInner);
+
+		// class
+		magic.get(object, 'class', object.getClass);
+		magic.set(object, 'class', object.setClass);
+
+		// style
+		magic.get(object, 'style', object.getStyle);
+		magic.set(object, 'style', object.setStyle);
+
+		return object;
+	};
+
+	// methods
+	var Methods = function() {
 
 		// inner magic
 		this.getInner = function() {
 			var self = this;
-			return this.length == 1 ? this[0].innerHTML : (function() {
+			return (this.length == 1) ? this[0].innerHTML : (function() {
 				var inner = [];
 				sortOut(self, function(el) {
 					inner.push(el.innerHTML);
@@ -15,7 +83,7 @@ var sf = (function() {
 		}
 
 		this.setInner = function(str) {
-			sortOut(this, function(el){
+			sortOut(this, function(el) {
 				el.innerHTML = str;
 			});
 		}
@@ -23,7 +91,7 @@ var sf = (function() {
 		// class magic
 		this.getClass = function() {
 			var self = this;
-			return this.length == 1 ? this[0].className : (function() {
+			return (this.length == 1) ? this[0].className : (function() {
 				var cls = [];
 				sortOut(self, function(el) {
 					cls.push(el.className);
@@ -41,7 +109,7 @@ var sf = (function() {
 		// style magic
 		this.getStyle = function() {
 			var self = this;
-			return this.length == 1 ? (function(){
+			return (this.length == 1) ? (function(){
 				var arr = self[0].style.cssText.split(';');
 				arr.pop();
 				return arr;
@@ -69,7 +137,7 @@ var sf = (function() {
 
 		this.getCss = function(at) {
 			var self = this;
-			return this.length == 1 ? this[0].style[at] : (function() {
+			return (this.length == 1) ? this[0].style[at] : (function() {
 				var inner = [];
 				sortOut(self, function(el) {
 					inner.push(el.style[at]);
@@ -97,7 +165,7 @@ var sf = (function() {
 
 		this.getAttr = function(at) {
 			var self = this;
-			return this.length == 1 ? this[0].getAttribute(at) : (function() {
+			return (this.length == 1) ? this[0].getAttribute(at) : (function() {
 				var attr = [];
 				sortOut(self, function(el) {
 					attr.push(el.getAttribute(at));
@@ -187,86 +255,7 @@ var sf = (function() {
 		}
 
 		this.each = function(callback) { sortOut(this, callback); }
-
 	};
-
-	// magic
-	var magic = {
-		get: function(object, prop, func) {
-			Object.defineProperty(object, prop, {
-				get: func,
-				configurable: true
-			});
-		},
-		set: function(object, prop, func) {
-			Object.defineProperty(object, prop, {
-				set: func,
-				configurable: true
-			});
-		}
-	};
-
-	var addMagic = function(object) {
-
-		// inner
-		magic.get(object, 'inner' , object.getInner);
-		magic.set(object, 'inner', object.setInner);
-
-		// class
-		magic.get(object, 'class', object.getClass);
-		magic.set(object, 'class', object.setClass);
-
-		// style
-		magic.get(object, 'style', object.getStyle);
-		magic.set(object, 'style', object.setStyle);
-
-		return object;
-	};
-
-	// core
-
-	var sortOut = function(object, callback) {
-		var i = object.length;
-		while (i--) { callback.apply(object[i], [object[i]]); }
-	};
-
-	var inherit = function(proto) {
-		var nullF = function() {};
-		nullF.prototype = proto;
-		var object = new nullF;
-		return object;
-	};
-
-	var sf = function(selector, parent) {
-		Actions.prototype = Array.prototype;
-		var object = addMagic(inherit(new Actions));
-		var parent = parent ? (parent.length ? parent[0] : parent) : document;
-		var nodeArray = [].slice.call(typeof(selector) != 'string' ? [selector] : parent.querySelectorAll(selector));
-
-		for (var i = 0; i != nodeArray.length; i++) {
-			object.push(nodeArray[i]);
-		}
-
-		return object;
-	};
-
-	sf.ready = function(callback, context) {
-		var context = (context && typeof(context) == 'object') ? context : window;
-		(document.readyState == 'complete') ? callback.apply(context)
-		: sf(document).addEv('readystatechange', function() {
-			(document.readyState == 'complete') && callback.apply(context);
-		});
-	}
-
-	// incudes
-
-	sf.requireCss = function(path) {
-		var node = document.createElement('link');
-		this(node).attr('rel', 'stylesheet');
-		this(node).attr('type', 'text/css');
-		this(node).attr('href', path);
-		this('head > link[href="' + path + '"]')[0] ? false : document.head.appendChild(node);
-	}
 
 	return sf;
 })();
