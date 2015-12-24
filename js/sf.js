@@ -250,9 +250,11 @@ var sf = (function() {
 		return object;
 	};
 
-	sf.ready = function(callback) {
-		sf(document).addEv('readystatechange', function() {
-			(document.readyState == 'complete') && callback();
+	sf.ready = function(callback, context) {
+		var context = (context && typeof(context) == 'object') ? context : window;
+		(document.readyState == 'complete') ? callback.apply(context)
+		: sf(document).addEv('readystatechange', function() {
+			(document.readyState == 'complete') && callback.apply(context);
 		});
 	}
 
