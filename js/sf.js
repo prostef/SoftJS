@@ -33,7 +33,7 @@ var sf = (function() {
 			(document.readyState == 'complete') && callback.apply(context);
 		});
 	}
-	
+
 	sf.requireCss = function(path) {
 		var node = document.createElement('link');
 		this(node).attr('rel', 'stylesheet');
