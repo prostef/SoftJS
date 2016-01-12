@@ -1,5 +1,5 @@
 # SoftJS
-**Script like jQ**
+**Script like jQuery**
 
 ## How to use?
 
@@ -12,10 +12,33 @@
 
 `sf(some-selector or node)` - returns an object with nodes found with the specified selector and with the desired methods for further work.
 Example:
-```javascript
-  sf('body > *')
+
+_HTML:_
+```html
+<div id="test">
+    <div class="some-class">
+        <span id="some-id">Test</span>
+    </div>
+    <div class="some-class-2">
+        <input type="button" class="test-btn" value="Test" />
+    </div>
+</div>
 ```
-Result: Object { 0: `<div.form>`, 1: `<some-node>`, 2: `<some-node>`, ..., length: n}
+_JS:_
+```javascript
+  sf('#test *');
+```
+> Result: Object { 0: `<div.some-class>`, 1: `<span#some-id>`, 2: `<div.some-class-2>`, 3: `<input.test-btn>`, length: 4 }
+
+```javascript
+  sf('#test > div');
+```
+> Result: Object { 0: `<div.some-class>`, 1: `<div.some-class-2>`, length: 2 }
+
+```javascript
+  sf('#some-id');
+```
+> Result: Object { 0: `<span#some-id>`, length: 1 }
 
 **Object main-methods:**
 
