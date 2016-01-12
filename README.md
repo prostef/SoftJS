@@ -40,7 +40,9 @@ _JS:_
 ```
 > Result: Object { 0: `<span#some-id>`, length: 1 }
 
-**Object main-methods:**
+
+
+### sf-object main-methods:
 
 * `sf(some-selector or node).css(property[, value])` - Gets or sets value for this property for the found nodes with the specified selector.
 
@@ -54,7 +56,7 @@ _JS:_
 
 * `sf(some-selector or node).rmEv(event, function[, capture])` - Removes saved function on this event for the found nodes with the specified selector.
 
-**Object magic-methods:**
+### sf-object magic-methods:
 
 * `sf(some-selector or node).inner [= 'text or layout']` - Gets or sets innerHTML for the found nodes with the specified selector.
 
@@ -62,7 +64,7 @@ _JS:_
 
 * `sf(some-selector or node).style [= 'css properties']` - Gets or sets style for the found nodes with the specified selector.
 
-**Object other-methods:**
+### sf-object other-methods:
 
 * `sf(some-selector or node).parent()` - Returns parent node into sf object for the found first node with the specified selector.
 
@@ -84,7 +86,7 @@ _JS:_
 
 * `sf(some-selector or node).each()` - Iterate founded nodes with the specified selector with access to each of them.
 
-**SoftJS Methods:**
+### SoftJS Methods:
 
 * `sf.ready(function)` - Perform this function when all document will be ready.
 Example:
