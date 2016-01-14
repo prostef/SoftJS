@@ -21,7 +21,7 @@ sf.addNodeBefore = function(node, beforeNode) {
 
 sf.rmNode = function(node) {
 	var node = node.length ? node[0] : node;
-	node ? node.parentNode.removeChild(node) : false;
+	return node ? node.parentNode.removeChild(node) : false;
 }
 
 sf.getNodeInfo = function(node) {
