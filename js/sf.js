@@ -35,11 +35,18 @@ var sf = (function() {
 	}
 
 	sf.requireCss = function(path) {
-		var node = document.createElement('link');
-		this(node).attr('rel', 'stylesheet');
-		this(node).attr('type', 'text/css');
-		this(node).attr('href', path);
-		this('head > link[href="' + path + '"]')[0] ? false : document.head.appendChild(node);
+
+		var self = this;
+		var path = Array.isArray(path) ? path : [path];
+		
+		sortOut(path, function(path){
+			var node = document.createElement('link');
+			self(node).attr('rel', 'stylesheet');
+			self(node).attr('type', 'text/css');
+			self(node).attr('href', path);
+			self('head > link[href="' + path + '"]')[0] ? false : document.head.appendChild(node);
+		});
+
 	}
 
 	// magic
