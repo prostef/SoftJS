@@ -100,13 +100,14 @@ Or:
 function testReadyAlert() {
     alert('This is perform when all document will be ready');
 }
-sf.ready( testReadyAlert() );
+sf.ready( testReadyAlert );
 ```
 
-* `sf.requireCss(path-to-ccs-file)` - Include this css file into `<head>` block.
+* `sf.requireCss(path-to-css-file or array paths)` - Include one css file or some css files into `<head>` block.
 Example:
 ```javascript
 sf.ready(function() {
+    sf.requireCss(['first.css', 'second.css']);
     sf.requireCss('/css/some-style.css');
 });
 ```
