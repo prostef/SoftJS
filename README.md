@@ -108,6 +108,15 @@ Example:
 ```javascript
 sf.ready(function() {
     sf.requireCss(['first.css', 'second.css']);
-    sf.requireCss('/css/some-style.css');
+    sf.requireCss('some-style.css');
+});
+```
+
+* `sf.requireJs(path-to-js-file or array paths)` - Include one javascript file or some javascript files into `<body>` block.
+Example:
+```javascript
+sf.ready(function() {
+    sf.requireJs(['first.js', 'second.js']);
+    sf.requireJs('some-style.js');
 });
 ```
