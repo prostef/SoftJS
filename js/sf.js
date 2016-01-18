@@ -38,26 +38,28 @@ var sf = (function() {
 
 		var self = this;
 		var path = Array.isArray(path) ? path : [path];
-		
-		sortOut(path, function(path){
-			var node = document.createElement('link');
+
+		sortOut(path, function(path) {
+			var node = sf.newNode('link');
+
 			self(node).attr('rel', 'stylesheet');
 			self(node).attr('type', 'text/css');
 			self(node).attr('href', path);
-			!self('head > link[href="' + path + '"]')[0] && document.head.appendChild(node);
+			!( self('head > link[href="' + path + '"]').length ) && sf.addNode(node, document.head);
 		});
 
 	}
 
 	sf.requireJs = function(path) {
-		
+
 		var self = this;
 		var path = Array.isArray(path) ? path : [path];
 
-		sortOut(path, function(path){
-			var node = document.createElement('script');
+		sortOut(path, function(path) {
+			var node = sf.newNode('script');
+
 			self(node).attr('src', path);
-			!self('body > script[src="' + path + '"]')[0] && document.body.appendChild(node);
+			!( self('body > script[src="' + path + '"]').length ) && sf.addNode(node);
 		});
 
 	}
