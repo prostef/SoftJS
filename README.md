@@ -103,7 +103,7 @@ function testReadyAlert() {
 sf.ready( testReadyAlert );
 ```
 
-* `sf.requireCss(path-to-css-file or array paths)` - Includes one css file or more css files into `<head>` block.
+* `sf.requireCss(path-to-css-file or array of paths)` - Includes one css file or more css files into `<head>` block.
 Example:
 ```javascript
 sf.ready(function() {
@@ -112,7 +112,7 @@ sf.ready(function() {
 });
 ```
 
-* `sf.requireJs(path-to-js-file or array paths)` - Includes one javascript file or more javascript files into `<body>` block.
+* `sf.requireJs(path-to-js-file or array of paths)` - Includes one javascript file or more javascript files into `<body>` block.
 Example:
 ```javascript
 sf.ready(function() {
