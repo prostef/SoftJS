@@ -84,7 +84,7 @@ _JS:_
 
 * `sf(some-selector or node).cssPath()` - Returns full css path for the found first node with the specified selector.
 
-* `sf(some-selector or node).each()` - Iterate founded nodes with the specified selector with access to each of them.
+* `sf(some-selector or node).each()` - Iterates founded nodes with the specified selector with access to each of them.
 
 ### SoftJS Methods:
 
@@ -103,7 +103,7 @@ function testReadyAlert() {
 sf.ready( testReadyAlert );
 ```
 
-* `sf.requireCss(path-to-css-file or array paths)` - Include one css file or some css files into `<head>` block.
+* `sf.requireCss(path-to-css-file or array paths)` - Includes one css file or more css files into `<head>` block.
 Example:
 ```javascript
 sf.ready(function() {
@@ -112,11 +112,11 @@ sf.ready(function() {
 });
 ```
 
-* `sf.requireJs(path-to-js-file or array paths)` - Include one javascript file or some javascript files into `<body>` block.
+* `sf.requireJs(path-to-js-file or array paths)` - Includes one javascript file or more javascript files into `<body>` block.
 Example:
 ```javascript
 sf.ready(function() {
     sf.requireJs(['first.js', 'second.js']);
-    sf.requireJs('some-style.js');
+    sf.requireJs('some-js.js');
 });
 ```
