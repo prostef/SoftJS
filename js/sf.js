@@ -13,19 +13,19 @@ var sf = (function() {
 		}
 
 		return object;
-	};
+	}
 
 	var inherit = function(proto) {
 		var nullF = function() {};
 		nullF.prototype = proto;
 		var object = new nullF;
 		return object;
-	};
+	}
 
 	var sortOut = function(object, callback) {
 		var i = object.length;
 		while (i--) { callback.apply(object[i], [ object[i] ]); }
-	};
+	}
 
 	sf.ready = function(callback, context) {
 		var context = (context && typeof(context) == 'object') ? context : window;
@@ -40,12 +40,13 @@ var sf = (function() {
 		var path = Array.isArray(path) ? path : [path];
 
 		sortOut(path, function(path) {
-			var node = sf.newNode('link');
+			var node = self.newNode('link');
 
 			self(node).attr('rel', 'stylesheet');
 			self(node).attr('type', 'text/css');
 			self(node).attr('href', path);
-			!( self('head > link[href="' + path + '"]').length ) && sf.addNode(node, document.head);
+			!self('head > link[href="' + path + '"]').length &&
+				self.addNode(node, document.head);
 		});
 
 	}
@@ -56,10 +57,11 @@ var sf = (function() {
 		var path = Array.isArray(path) ? path : [path];
 
 		sortOut(path, function(path) {
-			var node = sf.newNode('script');
+			var node = self.newNode('script');
 
 			self(node).attr('src', path);
-			!( self('body > script[src="' + path + '"]').length ) && sf.addNode(node);
+			!self('body > script[src="' + path + '"]').length &&
+				self.addNode(node);
 		});
 
 	}
@@ -78,7 +80,7 @@ var sf = (function() {
 				configurable: true
 			});
 		}
-	};
+	}
 
 	var addMagic = function(object) {
 
@@ -95,7 +97,7 @@ var sf = (function() {
 		magic.set(object, 'style', object.setStyle);
 
 		return object;
-	};
+	}
 
 	// methods
 	var Methods = function() {
@@ -285,7 +287,8 @@ var sf = (function() {
 		}
 
 		this.each = function(callback) { sortOut(this, callback); }
-	};
+	}
 
 	return sf;
+
 })();
