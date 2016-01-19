@@ -2,14 +2,16 @@
 sf.notify = function(text, type){
 
 	self = this.notify;
+	var queue = Array.isArray(text) ? text : [ { text: text, type: type } ];
 	self.init();
-	self.push(text, type);
+	for(var i = 0 ; i != queue.length ; i++)
+		self.push(queue[i].text, queue[i].type);
 	self.shift();
 
 }
 
 sf.notify.queue = [];
-sf.notify.delay= 3000;
+sf.notify.delay= 1500;
 sf.notify.max = 5;
 
 sf.notify.init = function(){
@@ -52,6 +54,7 @@ sf.notify.show = function(notify){
 
 	var type = notify.type;
 	var text = notify.text ? '<div class="text">' + notify.text + '</div>' : '';
+
 	notify = sf.newNode('div');
 	notify.className = 'sf-notify ' + type;
 	notify.innerHTML = text;
@@ -65,11 +68,13 @@ sf.notify.show = function(notify){
 	else sf.addNode(notify, this.container);
 
 	var timeOut;
+
 	notify.onclick = function(){
 		clearTimeout(timeOut);
 		sf.rmNode(notify);
 		sf.notify.shift();
 	};
+
 	timeOut = setTimeout(function(){
 		sf.rmNode(notify);
 		sf.notify.shift();
