@@ -4,11 +4,13 @@ sf.notify = function(text, type){
 	self = this.notify;
 	self.init();
 	self.push(text, type);
-	self.pop();
+	self.shift();
 
 }
 
 sf.notify.queue = [];
+sf.notify.delay= 3000;
+sf.notify.max = 5;
 
 sf.notify.init = function(){
 
@@ -34,13 +36,16 @@ sf.notify.push = function(text, type){
 
 }
 
-sf.notify.pop = function(count){
+sf.notify.shift = function(){
 
-var count = count ? count : this.queue.length;
+	var notifys = sf('.sf-notify', this.container);
+	var count = - (notifys.length - this.max);
+
 	while(count-- && this.queue.length){
 		this.show(this.queue.shift());
 	}
 
+	return ;
 }
 
 sf.notify.show = function(notify){
@@ -50,14 +55,24 @@ sf.notify.show = function(notify){
 	notify = sf.newNode('div');
 	notify.className = 'sf-notify ' + type;
 	notify.innerHTML = text;
-	sf.addNode(notify, this.container);
+
+	var notifys = sf('.sf-notify', this.container);
+	var delay = this.delay * (notifys.length + 1);
+
+	if(notifys.length){
+		sf.addNodeBefore(notify, notifys[0]);
+	}
+	else sf.addNode(notify, this.container);
+
 	var timeOut;
 	notify.onclick = function(){
 		clearTimeout(timeOut);
 		sf.rmNode(notify);
+		sf.notify.shift();
 	};
 	timeOut = setTimeout(function(){
-		setTimeout(function(){ sf.rmNode(notify); }, 300);
-	}, 5000);
+		sf.rmNode(notify);
+		sf.notify.shift();
+	}, delay);
 
 }
