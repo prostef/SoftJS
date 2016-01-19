@@ -1,34 +1,82 @@
-sf.alert = function(contentText, titleText, titleColor, fontFamily) {
+sf.alert = function(text, type){
+
+	self = this.alert;
+	var queue = Array.isArray(text) ? text : [ { text: text, type: type } ];
+	self.init();
+	for(var i = 0 ; i != queue.length ; i++)
+		self.push(queue[i].text, queue[i].type);
+	self.shift();
+
+}
+
+sf.alert.queue = [];
+sf.alert.delay= 1500;
+sf.alert.max = 5;
+
+sf.alert.init = function(){
+
 	sf.requireCss('css/sf.css');
-	self = this;
+
+	var node = sf('body>#sf-alerts')[0];
+	if(!node){
+		node = sf.newNode('div');
+		node.id = 'sf-alerts';
+	}
+
+	sf.addNode(node);
+	this.container = node;
+
+}
+
+sf.alert.push = function(text, type){
+
+	this.queue.push({
+		text: text,
+		type: type ? type : ''
+	});
+
+}
+
+sf.alert.shift = function(){
+
+	var alerts = sf('.sf-alert', this.container);
+	var count = - (alerts.length - this.max);
+
+	while(count-- && this.queue.length){
+		this.show(this.queue.shift());
+	}
+
+	return ;
+}
+
+sf.alert.show = function(alert){
+
+	var type = alert.type;
+	var text = alert.text ? '<div class="text">' + alert.text + '</div>' : '';
+
+	alert = sf.newNode('div');
+	alert.className = 'sf-alert ' + type;
+	alert.innerHTML = text;
+
+	var alerts = sf('.sf-alert', this.container);
+	var delay = this.delay * (alerts.length + 1);
+
+	if(alerts.length){
+		sf.addNodeBefore(alert, alerts[0]);
+	}
+	else sf.addNode(alert, this.container);
+
 	var timeOut;
-	var titleColor = titleColor ? titleColor : '#3B414F';
-	var titleText = titleText ? '<h1 class="sf-Alert-Title" style="color: ' + titleColor + ';">' + titleText + '</h1>' : '';
-	var contentText = contentText ? '<div class="sf-Alert-Content">' + contentText + '</div>' : '';
-	var fontFamily = fontFamily ? fontFamily : '';
 
-	var mainWindow = self('#sf-Alerts')[0];
-	!mainWindow && function(){
-		mainWindow = self.newNode('div');
-		mainWindow.id = 'sf-Alerts';
-		self.addNode(mainWindow);
-	}();
-
-	var item = self.newNode('div');
-	item.className = 'sf-Alert';
-	item.onclick = function () {
+	alert.onclick = function(){
 		clearTimeout(timeOut);
-		self.rmNode(item);
+		sf.rmNode(alert);
+		sf.alert.shift();
 	};
-	item.style.fontFamily = fontFamily;
-	item.style.opacity='0.97';
-	item.innerHTML = titleText+contentText;
-	self.addNode(item,mainWindow);
-	timeOut = setTimeout(
-		function () {
-			item.style.opacity='0';
-			setTimeout(function () {self.rmNode(item);}, 300);
-		},
-		5000
-	);
+
+	timeOut = setTimeout(function(){
+		sf.rmNode(alert);
+		sf.alert.shift();
+	}, delay);
+
 }
