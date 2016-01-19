@@ -52,12 +52,12 @@ sf.notify.show = function(notify){
 	notify.innerHTML = text;
 	sf.addNode(notify, this.container);
 	var timeOut;
-	notify.onclick = function(){
-		clearTimeout(timeOut);
-		sf.rmNode(notify);
-	};
-	timeOut = setTimeout(function(){
-		setTimeout(function(){ sf.rmNode(notify); }, 300);
-	}, 5000);
+	// notify.onclick = function(){
+	// 	clearTimeout(timeOut);
+	// 	sf.rmNode(notify);
+	// };
+	// timeOut = setTimeout(function(){
+	// 	setTimeout(function(){ sf.rmNode(notify); }, 300);
+	// }, 5000);
 
 }
