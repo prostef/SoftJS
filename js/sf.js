@@ -45,8 +45,7 @@ var sf = (function() {
 			self(node).attr('rel', 'stylesheet');
 			self(node).attr('type', 'text/css');
 			self(node).attr('href', path);
-			!self('head > link[href="' + path + '"]').length &&
-				self.addNode(node, document.head);
+			!self('head > link[href="' + path + '"]').length && self.addNode(node, document.head);
 		});
 
 	}
@@ -60,10 +59,22 @@ var sf = (function() {
 			var node = self.newNode('script');
 
 			self(node).attr('src', path);
-			!self('body > script[src="' + path + '"]').length &&
-				self.addNode(node);
+			!self('body > script[src="' + path + '"]').length && self.addNode(node);
 		});
 
+	}
+
+	sf.destroyCss = function(path) {
+
+		var self = this;
+		var path = Array.isArray(path) ? path : [path];
+
+		sortOut(path, function(path) {
+			var node = self('head > link[href="' + path + '"]');
+
+			node.length && self.rmNode(node);
+		});
+		
 	}
 
 	// magic
