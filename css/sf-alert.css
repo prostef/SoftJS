@@ -1,48 +1,44 @@
-#sf-Alerts{
+#sf-alerts{
 	position: fixed;
 	right: 5px;
 	top: 5px;
 	z-index: 1000;
 }
-#sf-Alerts .sf-Alert {
+#sf-alerts>.sf-alert{
 	width: 300px;
-	opacity: 0;
-	background-color: #FFF;
 	box-shadow: -1px 1px 5px rgba(0, 0, 0, 0.3);
-	padding: 0 20px;
 	outline: none;
-	-webkit-box-sizing: border-box;
-	-moz-box-sizing: border-box;
 	box-sizing: border-box;
-	-webkit-transition: 0.3s;
-	-o-transition: 0.3s;
 	transition: 0.3s;
-	-moz-user-select: none;
-	-o-user-select: none;
-	-khtml-user-select: none;
-	-webkit-user-select: none;
 	user-select: none;
 	cursor: pointer;
 	white-space: normal;
 	word-wrap: break-word;
 	margin-bottom: 15px;
-}
-#sf-Alerts .sf-Alert:hover {
-	opacity: 1 !important;
-}
-#sf-Alerts .sf-Alert .sf-Alert-Title {
 	text-align: left;
-	padding: 10px 0;
-	font-size: 14pt;
-	font-weight: bold;
-	font-family: inherit;
-	border-bottom: 1px solid #808080;
-	margin: 0;
-}
-#sf-Alerts .sf-Alert .sf-Alert-Content {
-	text-align: left;
-	padding: 15px 0;
+	padding: 15px;
 	font-size: 12pt;
 	color: #404040;
 	font-family: inherit;
+	opacity: 0.9;
+	padding-left: 50px;
+	background-color: #FFF;
+	background-position: 12.5px center;
+	background-repeat: no-repeat;
+	background-size: 25px;
+	background-image: url(../images/alert-def.svg);
+}
+#sf-alerts>.sf-alert:hover{ opacity: 1; }
+#sf-alerts>.sf-alert.ok{
+	background-image: url(../images/alert-ok.svg);
+	background-color: #AFFBC6;
+}
+#sf-alerts>.sf-alert.warn{
+	background-image: url(../images/alert-warn.svg);
+	background-color: #FBF5AF;
+}
+#sf-alerts>.sf-alert.error,
+#sf-alerts>.sf-alert.err{
+	background-image: url(../images/alert-err.svg);
+	background-color: #FBB6AF;
 }
