@@ -1,17 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 19.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
 	 viewBox="0 0 305 305" style="enable-background:new 0 0 305 305;" xml:space="preserve">
-<style type="text/css">
-	.st0{fill:#404040;}
-</style>
-<g id="Слой_1">
-	<path class="st0" d="M152.5,0C68.4,0,0,68.4,0,152.5S68.4,305,152.5,305S305,236.6,305,152.5S236.6,0,152.5,0z M152.5,280
+<g>
+	<path fill="#404040" d="M152.5,0C68.4,0,0,68.4,0,152.5S68.4,305,152.5,305S305,236.6,305,152.5S236.6,0,152.5,0z M152.5,280
 		C82.2,280,25,222.8,25,152.5S82.2,25,152.5,25S280,82.2,280,152.5S222.8,280,152.5,280z"/>
-	<circle class="st0" cx="153" cy="238" r="13"/>
-	<path class="st0" d="M153.9,206.2h-2c-6.6,0-12-6.1-12-13.6V65.9c0-7.5,5.4-13.6,12-13.6h2c6.6,0,12,6.1,12,13.6v126.8
+	<circle fill="#404040" cx="153" cy="238" r="13"/>
+	<path fill="#404040" d="M153.9,206.2h-2c-6.6,0-12-6.1-12-13.6V65.9c0-7.5,5.4-13.6,12-13.6h2c6.6,0,12,6.1,12,13.6v126.8
 		C165.9,200.1,160.5,206.2,153.9,206.2z"/>
-</g>
-<g id="Слой_2">
 </g>
 </svg>
