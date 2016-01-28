@@ -46,7 +46,6 @@ sf.alert.shift = function(){
 		this.show(this.queue.shift());
 	}
 
-	return ;
 }
 
 sf.alert.show = function(alert){
