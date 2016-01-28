@@ -10,7 +10,7 @@ sf.alert = function(text, type){
 }
 
 sf.alert.queue = [];
-sf.alert.delay= 1500;
+sf.alert.delay= 2000;
 sf.alert.max = 5;
 
 sf.alert.init = function(){
