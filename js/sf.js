@@ -70,9 +70,10 @@ var sf = (function() {
 		var path = Array.isArray(path) ? path : [path];
 
 		sortOut(path, function(path) {
-			var node = self('head > link[href="' + path + '"]');
 
+			var node = self('head > link[href="' + path + '"]');
 			node.length && self.rmNode(node);
+
 		});
 		
 	}
