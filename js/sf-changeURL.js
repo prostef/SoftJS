@@ -1,6 +1,10 @@
-sf.ready(function(){
+sf(window).addEv('load', function(){
 
-	sf(window).addEv('popstate', sf.popstate);
+	setTimeout(function(){
+
+		sf(window).addEv('popstate', sf.popstate);
+
+	}, 0);
 
 });
 
