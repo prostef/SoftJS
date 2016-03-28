@@ -15,7 +15,7 @@ sf.alert.max = 5;
 
 sf.alert.init = function(){
 
-	sf.requireCss('css/sf.css');
+	sf.requireCss('/css/sf.css');
 
 	var node = sf('body>#sf-alerts')[0];
 	if(!node){
