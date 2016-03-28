@@ -19,7 +19,7 @@ sf.popup.open = function(srcLoader){
 
 	popupWindow.onclick = function (event) {
 		var event = event ? event : window.event;
-		if(event.target.id == popupWindow.id) this.close();
+		if(event.target.id == popupWindow.id) sf.popup.close();
 	};
 
 	self.addNode(popupWindow);
