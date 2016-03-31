@@ -7,7 +7,6 @@ sf.ajax = (function(){
 		data.fallback = (data.fallback && typeof(data.fallback) == 'function') ? data.fallback : function(){};
 		data.method = (data.method && typeof(data.method) == 'string') ? data.method : 'POST';
 		data.headers = (data.headers && typeof(data.headers) == 'object') ? data.headers : {};
-		data.context = (data.context && typeof(data.context) == 'object') ? data.context : {};
 
 		var req = new XMLHttpRequest();
 
@@ -17,10 +16,9 @@ sf.ajax = (function(){
 
 			req.onreadystatechange = function(){
 
-				req.readyState == 4 && (function(){
-					req.status == 200
-					? data.callback.apply(data.context, [req])
-					: data.fallback.apply(data.context, [req]);
+				if(req.readyState == 4) (function(){
+					if(req.status == 200){ data.callback(req); }
+					else data.fallback(req);
 				})();
 
 			};
@@ -33,7 +31,7 @@ sf.ajax = (function(){
 
 	}
 
-	ajax.json = function(dst, body, callback, fallback, context){
+	ajax.json = function(dst, body, callback, fallback){
 
 		var body = (body && typeof(body)=='object') ? body: {};
 
@@ -41,7 +39,6 @@ sf.ajax = (function(){
 			dst: dst,
 			callback: callback,
 			fallback: fallback,
-			context: context,
 			headers: {'Content-type': 'application/json'}
 		}
 
