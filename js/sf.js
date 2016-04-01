@@ -274,7 +274,7 @@ var sf = (function() {
 		}
 
 		this.last = function() {
-			return sf(this.parent()[this.length - 1].lastElementChild);
+			return sf(this.parent()[0].lastElementChild);
 		}
 
 		this.stringNode = function() {
