@@ -249,7 +249,7 @@ var sf = (function() {
 		}
 
 		// other
-		this.one = function() {
+		this.node = function() {
 			return this[0];
 		}
 
@@ -282,7 +282,7 @@ var sf = (function() {
 		}
 
 		this.child = function(i) {
-			return sf(this.parent().children()[i ? i : 0]);
+			return sf(this[i ? i : 0]);
 		}
 
 		this.stringNode = function() {
