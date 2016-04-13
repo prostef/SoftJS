@@ -75,7 +75,7 @@ var sf = (function() {
 			node.length && self.rmNode(node);
 
 		});
-		
+
 	}
 
 	// magic
@@ -249,6 +249,10 @@ var sf = (function() {
 		}
 
 		// other
+		this.one = function() {
+			return this[0];
+		}
+
 		this.parent = function() {
 			return sf(this[0].parentNode);
 		}
@@ -275,6 +279,10 @@ var sf = (function() {
 
 		this.last = function() {
 			return sf(this.parent()[0].lastElementChild);
+		}
+
+		this.child = function(i) {
+			return sf(this.parent().children()[i ? i : 0]);
 		}
 
 		this.stringNode = function() {
