@@ -2,7 +2,7 @@ sf.ajax = (function(){
 
 	var ajax = function(data){
 
-		data.dst = (data.dst && typeof(data.dst) == 'string') ? data.dst : '/';
+		data.dst = (data.dst && typeof(data.dst) == 'string') ? data.dst : window.location.href;
 		data.callback = (data.callback && typeof(data.callback) == 'function') ? data.callback : function(){};
 		data.fallback = (data.fallback && typeof(data.fallback) == 'function') ? data.fallback : function(){};
 		data.method = (data.method && typeof(data.method) == 'string') ? data.method : 'POST';
