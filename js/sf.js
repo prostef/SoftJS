@@ -26,12 +26,22 @@ var sf = (function() {
 		var i = object.length;
 		while (i--) { callback.apply(object[i], [ object[i] ]); }
 	}
-
+	
 	sf.ready = function(callback, context) {
+
 		var context = (context && typeof(context) == 'object') ? context : window;
-		(document.readyState == 'complete') ? callback.apply(context) : sf(document).addEv('readystatechange', function() {
-			(document.readyState == 'complete') && callback.apply(context);
-		});
+
+		var handler = function () {
+
+			window.removeEventListener('load', handler);
+			callback.apply(context);
+
+		};
+
+		if (document.readyState == 'complete') callback.apply(context);
+
+		else window.addEventListener('load', handler);
+
 	}
 
 	sf.requireCss = function(path) {
