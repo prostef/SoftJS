@@ -317,6 +317,20 @@ var sf = (function() {
 		}
 
 		this.each = function(callback) { sortOut(this, callback); }
+
+		this.replace = function(newNode) {
+
+			sortOut(this, function(node) {
+
+				var parent = node.parentNode;
+				var tmp = newNode.cloneNode(true);
+				parent.insertBefore(tmp, node);
+				parent.removeChild(node);
+
+			});
+
+		}
+
 	}
 
 	return sf;
